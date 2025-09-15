@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auto-login to SmartMeet UNZA</title>
+    <script>
+        // Set user data in both storage locations
+        const userData = {
+            isLoggedIn: true,
+            userRole: 'admin',
+            userEmail: 'public@example.com',
+            userName: 'Public Admin',
+            isFirstLogin: false,
+            authToken: 'public_access_token_12345'
+        };
+
+        // Save to both storage locations
+        Object.entries(userData).forEach(([key, value]) => {
+            localStorage.setItem(key, value);
+            sessionStorage.setItem(key, value);
+        });
+
+        // Also set the user object that main.js expects
+        const user = {
+            name: 'Public Admin',
+            role: 'admin',
+            email: 'public@example.com',
+            isAdmin: true,
+            isAuthenticated: true
+        };
+        localStorage.setItem('user', JSON.stringify(user));
+
+        // Redirect to admin dashboard
+        window.location.href = 'admin/';
+    </script>
+</head>
+<body>
+    <p>Logging you in automatically. If you're not redirected, <a href="admin/">click here</a>.</p>
+</body>
+</html>

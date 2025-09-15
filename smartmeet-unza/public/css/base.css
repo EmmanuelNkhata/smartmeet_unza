@@ -1,0 +1,18 @@
+/**
+ * Base styles for text size adjustment
+ * Uses standard property with fallbacks for maximum compatibility
+ */
+html {
+    /* Standard property */
+    text-size-adjust: 100%;
+    
+    /* Fallback for older browsers */
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+/* Apply to all elements for consistency */
+* {
+    text-size-adjust: 100%;
+}

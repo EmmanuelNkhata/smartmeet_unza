@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback & Rating - SmartMeet UNZA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Rating Stars Styling */
+        .rating-stars { direction: rtl; unicode-bidi: bidi-override; }
+        .rating-stars input[type="radio"] { display: none; }
+        .rating-stars label { color: #d1d5db; font-size: 1.5rem; padding: 0 2px; cursor: pointer; transition: color 0.2s; }
+        .rating-stars label:hover,
+        .rating-stars label:hover ~ label,
+        .rating-stars input[type="radio"]:checked ~ label { color: #f59e0b; }
+        
+        /* Feedback Box Animation */
+        .feedback-box { transition: all 0.3s ease; max-height: 0; overflow: hidden; opacity: 0; }
+        .feedback-box.expanded { max-height: 1000px; opacity: 1; padding: 1.5rem; margin-top: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; background-color: #f9fafb; }
+        
+        /* Meeting Card Hover Effect */
+        .meeting-card { transition: all 0.2s ease; }
+        .meeting-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        
+        /* Loading Spinner */
+        .spinner { width: 1.5rem; height: 1.5rem; border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; display: inline-block; vertical-align: middle; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Form validation */
+        .error-message { color: #dc2626; font-size: 0.875rem; margin-top: 0.25rem; display: none; }
+        .error .error-message { display: block; }
+        .error input, .error select, .error textarea { border-color: #dc2626 !important; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <div id="sidebar-container" class="h-full"></div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <div id="header-container"></div>
+            
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-6">Submit Feedback</h3>
+                        <form id="feedbackForm" class="space-y-6" novalidate>
+                            <div>
+                                <label for="comments" class="block text-sm font-medium text-gray-700 mb-1">Your Feedback</label>
+                                <textarea id="comments" name="comments" rows="5" required class="shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md" placeholder="Share your thoughts about your recent meeting..."></textarea>
+                                <div id="comments-error" class="error-message">Please provide your feedback</div>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="anonymous" name="anonymous" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                <label for="anonymous" class="ml-2 block text-sm text-gray-700">Submit anonymously</label>
+                            </div>
+                            <div class="pt-2">
+                                <button type="submit" id="submitBtn" class="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                    <span id="submitText">Submit Feedback</span>
+                                    <span id="submitSpinner" class="spinner ml-2 hidden"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    
+    <!-- Scripts -->
+    <script src="js/common.js"></script>
+    <script src="js/feedback.js"></script>
+</body>
+</html>

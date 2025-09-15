@@ -1,0 +1,60 @@
+<!-- Sidebar Component -->
+<div class="w-64 bg-blue-800 text-white p-4 flex flex-col min-h-screen">
+    <!-- Logo and Title -->
+    <div class="flex flex-col items-center py-4 border-b border-blue-700 mb-6">
+        <div class="flex items-center justify-center space-x-2 mb-2">
+            <span class="text-2xl font-bold">SmartMeet</span>
+        </div>
+        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md mb-2">
+            <span class="text-blue-800 font-bold text-xl">UNZA</span>
+        </div>
+        <p class="text-sm text-blue-200">User Panel</p>
+    </div>
+    
+    <!-- User Info -->
+    <div class="flex items-center mb-8 p-2 bg-blue-700 rounded">
+        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+            <i class="fas fa-user"></i>
+        </div>
+        <div>
+            <p id="sidebarUserName" class="font-medium">User Name</p>
+            <p id="sidebarUserRole" class="text-xs text-blue-200">Member</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="space-y-2">
+        <a href="index.html" class="flex items-center p-2 rounded hover:bg-blue-700" id="nav-dashboard">
+            <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="my-meetings.html" class="flex items-center p-2 rounded hover:bg-blue-700" id="nav-meetings">
+            <i class="fas fa-calendar-alt w-5 mr-3"></i>
+            <span>My Meetings</span>
+        </a>
+        <a href="documents.html" class="flex items-center p-2 rounded hover:bg-blue-700" id="nav-documents">
+            <i class="fas fa-file-alt w-5 mr-3"></i>
+            <span>Documents</span>
+        </a>
+        <a href="notifications.html" class="flex items-center p-2 rounded hover:bg-blue-700" id="nav-notifications">
+            <i class="fas fa-bell w-5 mr-3"></i>
+            <span>Notifications</span>
+        </a>
+        <a href="feedback.html" class="flex items-center p-2 rounded hover:bg-blue-700" id="nav-feedback">
+            <i class="fas fa-star w-5 mr-3"></i>
+            <span>Feedback & Rating</span>
+        </a>
+        <a href="settings.html" class="flex items-center p-2 rounded hover:bg-blue-700" id="nav-settings">
+            <i class="fas fa-cog w-5 mr-3"></i>
+            <span>Settings</span>
+            <i class="fas fa-angle-right ml-auto opacity-70"></i>
+        </a>
+
+        <div class="border-t border-blue-700 my-4"></div>
+        <p class="px-2 text-xs uppercase tracking-wider text-blue-300 mb-2">Account</p>
+        <button id="sidebarLogoutBtn" class="w-full flex items-center p-2 rounded hover:bg-blue-700 text-left">
+            <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+            <span>Sign out</span>
+        </button>
+    </nav>
+</div>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page</title>
+    <script>
+        // Clear any existing auth data
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // Set the required auth data
+        const authData = {
+            isLoggedIn: 'true',
+            userRole: 'admin',
+            userEmail: 'public@example.com',
+            userName: 'Public Admin',
+            authToken: 'public_access_token_12345',
+            user: JSON.stringify({
+                name: 'Public Admin',
+                role: 'admin',
+                email: 'public@example.com',
+                isAdmin: true,
+                isAuthenticated: true
+            })
+        };
+
+        // Set the data in both storage locations
+        Object.entries(authData).forEach(([key, value]) => {
+            localStorage.setItem(key, value);
+            sessionStorage.setItem(key, value);
+        });
+
+        // Redirect to admin page
+        window.location.href = 'admin/';
+    </script>
+</head>
+<body>
+    <h1>Redirecting to Admin Dashboard...</h1>
+    <p>If you're not redirected in a few seconds, <a href="admin/">click here</a>.</p>
+</body>
+</html>

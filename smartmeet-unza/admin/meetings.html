@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meetings - SmartMeet UNZA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Common utilities -->
+    <script src="../public/js/common.js"></script>
+    <!-- Auth utilities -->
+    <script src="/public/js/auth.js"></script>
+    <style>
+        /* Polished meeting card styles */
+        #meetingsList > li { padding: 1rem; }
+        #meetingsList > li > div {
+          border: 1px solid #eef2f7; /* slate-100 */
+          border-radius: 0.75rem; /* rounded-xl */
+          background: #fff;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+          transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+        #meetingsList > li > div:hover {
+          box-shadow: 0 6px 16px rgba(2, 6, 23, 0.08);
+          transform: translateY(-1px);
+        }
+        /* Header spacing */
+        #meetingsList > li > div > div:first-child { /* header row */
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid #f1f5f9; /* slate-100 */
+        }
+        /* Title */
+        #meetingsList p.text-lg { color: #0f172a; /* slate-900 */ font-weight: 700; }
+        /* Action buttons */
+        #meetingsList button[data-action] {
+          font-size: 0.75rem; /* text-xs */
+          padding: 0.25rem 0.5rem; /* px-2 py-1 */
+          border-radius: 0.375rem; /* rounded-md */
+        }
+        /* Detail rows */
+        #meetingsList .sm\:flex .text-sm { color: #334155; /* slate-700 */ }
+        /* Badges row */
+        #meetingsList .mt-2.flex.items-center.space-x-2 { margin-top: 0.75rem; }
+      </style>
+<style>
+    /* Polished meeting card styles */
+    #meetingsList > li { padding: 1rem; }
+    #meetingsList > li > div {
+      border: 1px solid #eef2f7; /* slate-100 */
+      border-radius: 0.75rem; /* rounded-xl */
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    #meetingsList > li > div:hover {
+      box-shadow: 0 6px 16px rgba(2, 6, 23, 0.08);
+      transform: translateY(-1px);
+    }
+    /* Header spacing */
+    #meetingsList > li > div > div:first-child { /* header row */
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #f1f5f9; /* slate-100 */
+    }
+    /* Title */
+    #meetingsList p.text-lg { color: #0f172a; /* slate-900 */ font-weight: 700; }
+    /* Action buttons */
+    #meetingsList button[data-action] {
+      font-size: 0.75rem; /* text-xs */
+      padding: 0.25rem 0.5rem; /* px-2 py-1 */
+      border-radius: 0.375rem; /* rounded-md */
+    }
+    /* Detail rows */
+    #meetingsList .sm\:flex .text-sm { color: #334155; /* slate-700 */ }
+    /* Badges row */
+    #meetingsList .mt-2.flex.items-center.space-x-2 { margin-top: 0.75rem; }
+  </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-blue-800 text-white p-4 flex flex-col h-full">
+            <!-- Logo and Title -->
+            <div class="flex flex-col items-center py-4 border-b border-blue-700 mb-6">
+                <div class="flex items-center justify-center space-x-2 mb-2">
+                    <span class="text-2xl font-bold">SmartMeet</span>
+                </div>
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md mb-2">
+                    <span class="text-blue-800 font-bold text-xl">UNZA</span>
+                </div>
+                <p class="text-sm text-blue-200">Administration Panel</p>
+            </div>
+            
+            <!-- User Info -->
+            <div class="flex items-center mb-8 p-2 bg-blue-700 rounded">
+                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <p id="currentUserName" class="font-medium">Loading...</p>
+                    <p class="text-xs text-blue-200">Administrator</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="space-y-2 flex-1">
+                <a href="index.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="meetings.html" class="flex items-center p-2 rounded bg-blue-900">
+                    <i class="fas fa-calendar-alt w-5 mr-3"></i>
+                    <span>Meetings</span>
+                </a>
+                <a href="room-booking.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-door-open w-5 mr-3"></i>
+                    <span>Room Booking</span>
+                </a>
+                <a href="users.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-users-cog w-5 mr-3"></i>
+                    <span>Users & Roles</span>
+                </a>
+                <a href="documents.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-file-alt w-5 mr-3"></i>
+                    <span>Documents</span>
+                </a>
+                <a href="reports.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-chart-bar w-5 mr-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="notifications.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-bell w-5 mr-3"></i>
+                    <span>Notifications</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar Sign out (bottom) -->
+            <div class="mt-auto pt-4 border-t border-blue-700">
+                <button id="signOutBtn" class="w-full flex items-center p-2 rounded hover:bg-blue-700 text-red-100">
+                    <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                    <span>Sign out</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white shadow-sm p-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-semibold text-gray-800">Meetings</h2>
+                    <div class="flex items-center">
+                        <a href="/admin/" class="text-blue-600 hover:text-blue-800 flex items-center">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            <span>Back to Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 overflow-y-auto p-6">
+            <!-- Create Meeting Button -->
+            <div class="flex justify-end mb-6">
+                <button id="openCreate" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Create New Meeting
+                </button>
+            </div>
+
+            <!-- Filters -->
+            <div class="bg-white rounded-lg shadow p-4 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                        <input type="text" id="searchInput" placeholder="Search meetings..." class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
+                    </div>
+                    <div>
+                        <select id="statusFilter" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
+                            <option value="all">All Status</option>
+                            <option value="upcoming">Upcoming</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="typeFilter" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
+                            <option value="all">All Types</option>
+                            <option value="physical">Physical</option>
+                            <option value="virtual">Virtual</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button id="applyFilters" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meetings List -->
+            <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                <ul id="meetingsList" class="divide-y divide-gray-200"></ul>
+            </div>
+        </main>
+    </div>
+
+<!-- Create/Edit Meeting Modal -->
+  <div id="meetingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg w-full max-w-3xl">
+      <div class="p-4 border-b flex justify-between items-center">
+        <h3 id="modalTitle" class="text-lg font-medium">Create Meeting</h3>
+        <button id="closeModal" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="p-6 space-y-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+            <input id="mtTitle" type="text" class="w-full p-2 border rounded-md" placeholder="e.g. Department Meeting" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <select id="mtType" class="w-full p-2 border rounded-md">
+              <option value="physical">Physical</option>
+              <option value="virtual">Virtual</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+            <input id="mtDate" type="date" class="w-full p-2 border rounded-md" />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
+              <select id="mtStart" class="w-full p-2 border rounded-md"></select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
+              <select id="mtEnd" class="w-full p-2 border rounded-md"></select>
+            </div>
+          </div>
+          <div id="venueRow">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Venue</label>
+            <select id="mtVenue" class="w-full p-2 border rounded-md">
+              <option value="">Select venue</option>
+              <option value="CL1">Computer Lab 1 (CL1)</option>
+              <option value="CL2">Computer Lab 2 (CL2)</option>
+              <option value="CL3">Computer Lab 3 (CL3)</option>
+            </select>
+          </div>
+          <div id="linkRow" class="hidden">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Virtual Link</label>
+            <div class="flex gap-2">
+              <input id="mtLink" type="url" class="flex-1 p-2 border rounded-md" placeholder="https://meet.google.com/xyz-abcd-efg" />
+              <button id="btnGenMeet" type="button" class="px-3 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 flex items-center">
+                <i class="fab fa-google mr-2"></i>Generate
+              </button>
+              <button id="btnGCal" type="button" class="px-3 py-2 border rounded-md hover:bg-gray-50 flex items-center">
+                <i class="far fa-calendar-plus mr-2"></i>Add to Calendar
+              </button>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Generate opens Google Meet in a new tab. Copy the Meet link and paste it here.</p>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Agenda (PDF/DOCX/PPTX)</label>
+            <input id="mtAgenda" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx" class="w-full" />
+            <p class="text-xs text-gray-500 mt-1">Optional. Max 10 MB.</p>
+          </div>
+          <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Audience</label>
+              <select id="mtAudience" class="w-full p-2 border rounded-md">
+                <option value="all">All users</option>
+                <option value="admins">Admins only</option>
+                <option value="specific">Specific users</option>
+              </select>
+            </div>
+            <div id="participantsRow" class="hidden">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Select Participants</label>
+              <div id="participantsList" class="max-h-40 overflow-auto border rounded p-2 text-sm"></div>
+            </div>
+          </div>
+        </div>
+        <p id="mtError" class="text-sm text-red-600 hidden"></p>
+      </div>
+      <div class="p-4 border-t flex justify-end space-x-2">
+        <button id="cancelModal" class="px-4 py-2 border rounded-md hover:bg-gray-50">Cancel</button>
+        <button id="saveMeeting" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    const MEETINGS_KEY = 'sm_meetings_v1';
+    const USERS_KEY = 'sm_users_v1';
+    let meetings = [];
+    let users = [];
+    let editId = null;
+
+    // Utility functions
+    function $(selector, root = document) {
+      return root.querySelector(selector);
+    }
+
+    function $$(selector, root = document) {
+      return Array.from(root.querySelectorAll(selector));
+    }
+
+    function loadUsers(){ try{ users = JSON.parse(localStorage.getItem(USERS_KEY)||'[]'); }catch(e){ users=[]; } }
+    function loadMeetings(){ try{ meetings = JSON.parse(localStorage.getItem(MEETINGS_KEY)||'[]'); }catch(e){ meetings=[]; } }
+    function saveMeetings(){ localStorage.setItem(MEETINGS_KEY, JSON.stringify(meetings)); }
+
+    function minutes(t){ const [h,m]=t.split(':').map(Number); return h*60+m; }
+
+    function populateTimes(){
+      const startSel = $('#mtStart');
+      const endSel = $('#mtEnd');
+      startSel.innerHTML=''; endSel.innerHTML='';
+      for (let h=14; h<=19; h++){
+        for (let m of [0,30]){
+          if (h===19 && m>0) continue;
+          const hh=String(h).padStart(2,'0'); const mm=String(m).padStart(2,'0');
+          const t=`${hh}:${mm}`;
+          const o1=document.createElement('option'); o1.value=t; o1.textContent=t; startSel.appendChild(o1);
+          const o2=document.createElement('option'); o2.value=t; o2.textContent=t; endSel.appendChild(o2);
+        }
+      }
+      startSel.value='14:00';
+      adjustEndTimes();
+    }
+
+    function adjustEndTimes(){
+      const s=$('#mtStart').value; const sm=minutes(s);
+      Array.from($('#mtEnd').options).forEach(opt=>{ opt.disabled = minutes(opt.value) <= sm; });
+      const first=Array.from($('#mtEnd').options).find(o=>!o.disabled); if(first) $('#mtEnd').value=first.value;
+    }
+
+    function renderParticipants(){
+      const box = $('#participantsList');
+      if (!users || users.length===0){ box.innerHTML='<p class="text-xs text-gray-500">No users available</p>'; return; }
+      box.innerHTML = users.map(u=>`
+        <label class="flex items-center space-x-2 py-1">
+          <input type="checkbox" value="${u.email || u.name}" class="rounded" />
+          <span>${u.fullName || u.name} <span class="text-xs text-gray-400">(${u.role || 'user'})</span></span>
+        </label>
+      `).join('');
+    }
+
+    function toggleType(){
+      const type=$('#mtType').value;
+      if(type==='physical'){ $('#venueRow').classList.remove('hidden'); $('#linkRow').classList.add('hidden'); }
+      else { $('#venueRow').classList.add('hidden'); $('#linkRow').classList.remove('hidden'); }
+    }
+
+    function toggleParticipants(){
+      const v=$('#mtAudience').value;
+      if (v==='specific') $('#participantsRow').classList.remove('hidden'); else $('#participantsRow').classList.add('hidden');
+    }
+
+    function openGoogleMeet(){
+      window.open('https://meet.google.com/new', '_blank');
+    }
+
+    function openGoogleCalendar(){
+      const title = ($('#mtTitle').value || 'Meeting');
+      const date = ($('#mtDate').value || '').replace(/-/g,'');
+      const s = ($('#mtStart').value || '14:00').replace(':','') + '00';
+      const e = ($('#mtEnd').value || '15:00').replace(':','') + '00';
+      if (!date){
+        alert('Select a date first');
+        return;
+      }
+      const details = 'Created from SmartMeet. Add Google Meet in calendar if needed.';
+      const url = `https://calendar.google.com/calendar/u/0/r/eventedit?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${date}T${s}/${date}T${e}&details=${encodeURIComponent(details)}`;
+      window.open(url, '_blank');
+    }
+
+    function getAgendaPayload(){
+      const f=$('#mtAgenda').files[0]; if(!f) return null;
+      return { name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f) };
+    }
+
+    function gatherParticipants(){
+      return $$('#participantsList input[type="checkbox"]:checked').map(cb=>cb.value);
+    }
+
+    function showError(message) {
+      const errorElement = $('#mtError');
+      if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.classList.remove('hidden');
+        // Hide error after 5 seconds
+        setTimeout(() => {
+          errorElement.classList.add('hidden');
+        }, 5000);
+      } else {
+        console.error('Error:', message);
+        alert(message); // Fallback if error element not found
+      }
+    }
+
+    function validate(mt) {
+      if (!mt.title || mt.title.trim() === '') return 'Title is required';
+      if (!mt.date) return 'Date is required';
+      if (!mt.startTime) return 'Start time is required';
+      if (!mt.endTime) return 'End time is required';
+      
+      // Validate time range
+      const start = new Date(`${mt.date}T${mt.startTime}`);
+      const end = new Date(`${mt.date}T${mt.endTime}`);
+      if (start >= end) return 'End time must be after start time';
+      
+      if (mt.type === 'physical' && !mt.venue) return 'Please select a venue';
+      if (mt.type === 'virtual' && mt.link && !/^https?:\/\//i.test(mt.link)) {
+        return 'Please enter a valid URL starting with http:// or https://';
+      }
+      
+      if (mt.audience === 'specific' && (!mt.participants || mt.participants.length === 0)) {
+        return 'Please select at least one participant';
+      }
+      
+      if (mt.agenda && mt.agenda.size && mt.agenda.size > 10 * 1024 * 1024) {
+        return 'Agenda file size exceeds 10 MB limit';
+      }
+      
+      return ''; // No errors
+    }
+
+    function openModal(mode,id){
+      $('#mtError').classList.add('hidden');
+      editId = (mode==='edit')? id : null;
+      $('#modalTitle').textContent = (mode==='edit')? 'Edit Meeting' : 'Create Meeting';
+      if(mode==='edit'){
+        const mt = meetings.find(x=>x.id===id); if(!mt) return;
+        $('#mtTitle').value = mt.title;
+        $('#mtType').value = mt.type; toggleType();
+        $('#mtDate').value = mt.date;
+        $('#mtStart').value = mt.startTime; adjustEndTimes(); $('#mtEnd').value = mt.endTime;
+        if(mt.type==='physical'){ $('#mtVenue').value = mt.venue || ''; }
+        else { $('#mtLink').value = mt.link || ''; }
+        $('#mtAudience').value = mt.audience || 'all'; toggleParticipants();
+        const set=new Set(mt.participants||[]);
+        $$('#participantsList input[type="checkbox"]').forEach(cb=> cb.checked = set.has(cb.value));
+        $('#mtAgenda').value=''; // can't prefill file input
+      }else{
+        $('#mtTitle').value='';
+        $('#mtType').value='physical'; toggleType();
+        $('#mtDate').value=''; populateTimes();
+        $('#mtVenue').value=''; $('#mtLink').value='';
+        $('#mtAudience').value='all'; toggleParticipants();
+        $$('#participantsList input[type="checkbox"]').forEach(cb=> cb.checked=false);
+        $('#mtAgenda').value='';
+      }
+      const m=$('#meetingModal'); m.classList.remove('hidden'); m.classList.add('flex'); document.body.style.overflow='hidden';
+    }
+
+    function closeModal(){ const m=$('#meetingModal'); m.classList.add('hidden'); m.classList.remove('flex'); document.body.style.overflow='auto'; }
+
+    function saveFromModal(){
+      // Get form values
+      const title = $('#mtTitle')?.value.trim() || '';
+      const type = $('#mtType')?.value || 'physical';
+      const date = $('#mtDate')?.value || '';
+      const startTime = $('#mtStart')?.value || '';
+      const endTime = $('#mtEnd')?.value || '';
+      
+      // Validate required fields
+      if (!title || !date || !startTime || !endTime) {
+        showError('Please fill in all required fields');
+        return;
+      }
+      
+      // Create meeting object
+      const mt = {
+        id: editId || crypto.randomUUID(),
+        title: title,
+        type: type,
+        date: date,
+        startTime: startTime,
+        endTime: endTime,
+        venue: type === 'physical' ? ($('#mtVenue')?.value || '') : null,
+        link: type === 'virtual' ? ($('#mtLink')?.value.trim() || '') : null,
+        agenda: getAgendaPayload(),
+        audience: $('#mtAudience')?.value || 'all',
+        participants: $('#mtAudience')?.value === 'specific' ? gatherParticipants() : [],
+        status: 'Scheduled',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      const err=validate(mt); if(err){ const e=$('#mtError'); e.textContent=err; e.classList.remove('hidden'); return; }
+      if(editId){ const idx=meetings.findIndex(x=>x.id===editId); if(idx>-1) meetings[idx]={...meetings[idx], ...mt}; }
+      else { meetings.push(mt); }
+      saveMeetings(); closeModal(); renderMeetings();
+    }
+
+    function deleteMeeting(id){ const idx=meetings.findIndex(x=>x.id===id); if(idx===-1) return; if(!confirm('Delete this meeting?')) return; meetings.splice(idx,1); saveMeetings(); renderMeetings(); }
+
+    function startMeeting(id){
+      const mt = meetings.find(x=>x.id===id); if(!mt) return;
+      // Transition to In Progress
+      mt.status = 'In Progress';
+      mt.updatedAt = new Date().toISOString();
+      saveMeetings();
+      // Behavior by type
+      if (mt.type === 'virtual'){
+        if (mt.link && /^https?:\/\//i.test(mt.link)){
+          window.open(mt.link, '_blank');
+        } else {
+          if (confirm('No virtual link set. Open Google Meet to generate a link?')){
+            window.open('https://meet.google.com/new', '_blank');
+          }
+        }
+      } else {
+        // Physical meeting: optionally show a toast
+        try { alert('Meeting started. Status set to In Progress.'); } catch(e){}
+      }
+      renderMeetings();
+    }
+
+    function toEndDate(m){ try { return new Date(`${m.date}T${(m.endTime||'00:00')}:00`); } catch(e){ return null; } }
+
+    function finalizePastMeetings(){
+      const now = new Date();
+      let changed = false;
+      meetings.forEach(m => {
+        const endDt = toEndDate(m);
+        if (endDt && now > endDt && m.status !== 'Completed'){
+          m.status = 'Completed';
+          m.completedAt = new Date().toISOString();
+          m.joinedBy = Array.isArray(m.joinedBy) ? m.joinedBy : [];
+          m.noJoins = m.joinedBy.length === 0;
+          changed = true;
+        }
+      });
+      if (changed){ saveMeetings(); }
+    }
+
+    function renderMeetings(){
+      const term=$('#searchInput').value.trim().toLowerCase();
+      const tf=$('#typeFilter').value; const sf=$('#statusFilter').value;
+      const list=$('#meetingsList');
+      let arr=meetings.slice();
+      if(term) arr=arr.filter(m=> (m.title+m.venue+m.link).toLowerCase().includes(term));
+      if(tf) arr=arr.filter(m=> m.type===tf);
+      if(sf) arr=arr.filter(m=> m.status===sf);
+      if(arr.length===0){ list.innerHTML='<li class="p-6 text-gray-500">No meetings found.</li>'; return; }
+      list.innerHTML = arr.map(mt=>{
+        const agendaBtn = mt.agenda ? `<a href="${mt.agenda.url}" download="${mt.agenda.name}" class="inline-flex items-center px-2 py-1 rounded-md border text-xs text-gray-700 border-gray-300 hover:bg-gray-50" title="Download Agenda"><i class="fas fa-file-download mr-1 text-gray-500"></i> Agenda</a>` : '';
+        const venueStr = mt.type==='physical' ? (mt.venue||'') : (mt.link ? (mt.link.includes('meet.google.com') ? `<a class="inline-flex items-center px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 join-link" data-id="${mt.id}" target="_blank" href="${mt.link}"><i class="fab fa-google mr-2"></i>Join Google Meet</a>` : `<a class="text-blue-600 underline join-link" data-id="${mt.id}" target="_blank" href="${mt.link}">Join Link</a>`) : 'Virtual');
+        const audienceStr = mt.audience==='specific' ? `${mt.participants.length} invited` : (mt.audience==='admins' ? 'Admins only' : 'All users');
+        const startBtn = mt.status==='Scheduled' ? `<button class=\"px-2 py-1 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 text-xs\" data-action=\"start\" data-id=\"${mt.id}\" title=\"Start Meeting\"><i class=\"fas fa-play mr-1\"></i>Start</button>` : '';
+        return `
+          <li>
+            <div class=\"px-4 py-4 sm:px-6\">
+              <div class=\"flex items-center justify-between\">
+                <p class=\"text-lg font-medium text-blue-600 truncate\">${mt.title}</p>
+                <div class=\"ml-2 flex space-x-3 items-center\">
+                  ${agendaBtn}
+                  ${startBtn}
+                  <button class=\"text-blue-600 hover:text-blue-800\" data-action=\"edit\" data-id=\"${mt.id}\" title=\"Edit\"><i class=\"fas fa-edit\"></i></button>
+                  <button class=\"text-red-600 hover:text-red-800\" data-action=\"delete\" data-id=\"${mt.id}\" title=\"Delete\"><i class=\"fas fa-trash\"></i></button>
+                </div>
+              </div>
+              <div class=\"mt-2 sm:flex sm:justify-between\">
+                <div class=\"sm:flex\">
+                  <p class=\"flex items-center text-sm text-gray-500\"><i class=\"fas fa-calendar-day mr-1.5 text-gray-400\"></i>${mt.date}</p>
+                  <p class=\"mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6\"><i class=\"fas fa-clock mr-1.5 text-gray-400\"></i>${mt.startTime} - ${mt.endTime}</p>
+                </div>
+                <div class=\"mt-2 flex items-center text-sm text-gray-500 sm:mt-0\">
+                  <i class=\"fas fa-map-marker-alt mr-1.5 text-gray-400\"></i>${venueStr}
+                </div>
+              </div>
+              <div class=\"mt-2 flex items-center space-x-2\">
+                <span class=\"px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full\">${mt.status}</span>
+                <span class=\"px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full\">${mt.type==='physical' ? 'Physical' : 'Virtual'}</span>
+                <span class=\"px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full\">${audienceStr}</span>
+                ${mt.status==='Completed' ? `<span class=\"px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full\">Meeting done</span>${(Array.isArray(mt.joinedBy) && mt.joinedBy.length>0) ? '' : ' <span class=\"px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full\">No one joined</span>'}` : ''}
+              </div>
+            </div>
+          </li>`;
+      }).join('');
+    }
+
+    // Wire up event listeners
+    function setupEventListeners() {
+      // Filters
+      $('#searchInput')?.addEventListener('input', renderMeetings);
+      $('#typeFilter')?.addEventListener('change', renderMeetings);
+      $('#statusFilter')?.addEventListener('change', renderMeetings);
+      $('#btnReset')?.addEventListener('click', () => { 
+        if ($('#searchInput')) $('#searchInput').value = ''; 
+        if ($('#typeFilter')) $('#typeFilter').value = ''; 
+        if ($('#statusFilter')) $('#statusFilter').value = ''; 
+        renderMeetings(); 
+      });
+
+      // Modal controls
+      $('#openCreate')?.addEventListener('click', () => openModal('create'));
+      $('#closeModal')?.addEventListener('click', closeModal);
+      $('#cancelModal')?.addEventListener('click', closeModal);
+      $('#saveMeeting')?.addEventListener('click', saveFromModal);
+
+      // Form controls
+      $('#mtStart')?.addEventListener('change', adjustEndTimes);
+      $('#mtType')?.addEventListener('change', toggleType);
+      $('#mtAudience')?.addEventListener('change', toggleParticipants);
+      
+      // Google integration buttons
+      const btnGenMeet = document.getElementById('btnGenMeet');
+      const btnGCal = document.getElementById('btnGCal');
+      
+      if (btnGenMeet) btnGenMeet.addEventListener('click', openGoogleMeet);
+      if (btnGCal) btnGCal.addEventListener('click', openGoogleCalendar);
+    }
+
+    // Initialize the application
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set test user data if not already set
+      if (!localStorage.getItem('user')) {
+        localStorage.setItem('user', JSON.stringify({
+          name: 'Admin User',
+          email: 'admin@smartmeet.unza',
+          role: 'admin'
+        }));
+      }
+      
+      // Load data
+      loadUsers();
+      loadMeetings();
+      populateTimes();
+      renderParticipants();
+      finalizePastMeetings();
+      renderMeetings();
+      
+      // Set up event listeners
+      setupEventListeners();
+      
+      // Set up interval for finalizing past meetings
+      setInterval(finalizePastMeetings, 60000);
+
+      // Delegated card actions
+      $('#meetingsList').addEventListener('click', function(e){
+        const link = e.target.closest('a.join-link');
+        if (link){
+          const lid = link.getAttribute('data-id');
+          const m = meetings.find(x=>x.id===lid);
+          if (m){
+            m.joinedBy = Array.isArray(m.joinedBy) ? m.joinedBy : [];
+            if (!m.joinedBy.includes('viewer')) m.joinedBy.push('viewer');
+            m.updatedAt = new Date().toISOString();
+            saveMeetings();
+          }
+        }
+        const btn = e.target.closest('button[data-action]'); if(!btn) return;
+        const id = btn.dataset.id; const act = btn.dataset.action;
+        if (act==='edit') openModal('edit', id);
+        if (act==='start') startMeeting(id);
+        if (act==='delete') deleteMeeting(id);
+      });
+
+      // Role-based access for creating meetings (admin, studentAdmin)
+      let role = 'admin';
+      try { role = localStorage.getItem('sm_role_v1') || 'admin'; } catch(e){}
+      const canCreate = (role === 'admin' || role === 'studentAdmin');
+      const subnav = $('#meetingsSubnav');
+      const navCreate = $('#navCreateMeeting');
+      if (!canCreate){
+        $('#openCreate')?.classList.add('hidden');
+        subnav?.classList.add('hidden');
+      } else {
+        navCreate?.addEventListener('click', function(e){ e.preventDefault(); openModal('create'); });
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

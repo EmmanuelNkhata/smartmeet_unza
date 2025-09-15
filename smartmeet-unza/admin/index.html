@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartMeet UNZA - Admin Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+    <link rel="alternate icon" type="image/png" sizes="256x256" href="../assets/images/favicon-256.png">
+    <meta name="theme-color" content="#1e40af">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../public/css/base.css">
+    <link rel="stylesheet" href="../public/css/styles.css">
+    <!-- Common UI Components (loaded first) -->
+    <script src="../public/js/common.js"></script>
+    <!-- Auth Utilities -->
+    <script src="../public/js/auth.js"></script>
+    <!-- Admin Scripts (loaded last) -->
+    <script src="../public/js/admin.js"></script>
+    <script>
+    // Initialize admin dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize user info
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user && user.name) {
+            // Update profile info
+            const profileUserName = document.getElementById('profileUserName');
+            const userInitials = document.getElementById('userInitials');
+            
+            if (profileUserName) {
+                profileUserName.textContent = user.name;
+            }
+            
+            if (userInitials && user.name) {
+                const names = user.name.split(' ');
+                const initials = names.length > 1 
+                    ? `${names[0].charAt(0)}${names[names.length - 1].charAt(0)}`
+                    : names[0].charAt(0);
+                userInitials.textContent = initials.toUpperCase();
+            }
+        }
+    });
+    </script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-blue-800 text-white p-4 flex flex-col h-full">
+            <!-- Logo and Title -->
+            <div class="flex flex-col items-center py-4 border-b border-blue-700 mb-6">
+                <div class="flex items-center justify-center space-x-2 mb-2">
+                    <span class="text-2xl font-bold">SmartMeet</span>
+                </div>
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md mb-2">
+                    <span class="text-blue-800 font-bold text-xl">UNZA</span>
+                </div>
+                <p class="text-sm text-blue-200">Administration Panel</p>
+            </div>
+            
+            <!-- User Info -->
+            <div class="flex items-center mb-8 p-2 bg-blue-700 rounded">
+                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <p id="currentUserName" class="font-medium">Loading...</p>
+                    <p class="text-xs text-blue-200">Administrator</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="space-y-2 flex-1">
+                <a href="index.html" class="flex items-center p-2 rounded bg-blue-900">
+                    <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="meetings.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-calendar-alt w-5 mr-3"></i>
+                    <span>Meetings</span>
+                </a>
+                <a href="room-booking.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-door-open w-5 mr-3"></i>
+                    <span>Room Booking</span>
+                </a>
+                <a href="users.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-users-cog w-5 mr-3"></i>
+                    <span>Users & Roles</span>
+                </a>
+                <a href="documents.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-file-alt w-5 mr-3"></i>
+                    <span>Documents</span>
+                </a>
+                <a href="reports.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-chart-bar w-5 mr-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="notifications.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-bell w-5 mr-3"></i>
+                    <span>Notifications</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar Sign out (bottom) -->
+            <div class="mt-auto pt-4 border-t border-blue-700">
+                <button id="signOutBtn" class="w-full flex items-center p-2 rounded hover:bg-blue-700 text-red-100">
+                    <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                    <span>Sign out</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white shadow-sm p-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <button class="notifications-button p-2 text-gray-600 hover:text-gray-900 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 relative" aria-label="View notifications" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell" aria-hidden="true"></i>
+                                <span id="notificationsBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center" aria-live="polite">0</span>
+                            </button>
+                            <!-- Notifications Panel -->
+                            <div id="notificationsPanel" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden z-50" role="region" aria-label="Notifications" aria-live="polite">
+                                <div class="p-2 border-b border-gray-200">
+                                    <h2 class="text-sm font-medium text-gray-700" id="notifications-label">Notifications</h2>
+                                </div>
+                                <div class="notifications-container max-h-96 overflow-y-auto">
+                                    <!-- Notifications will be loaded here -->
+                                    <div class="p-4 text-center text-gray-500">Loading notifications...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <button id="profileMenuButton" class="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full" aria-label="User menu" aria-haspopup="true" aria-expanded="false">
+                                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
+                                    <span id="userInitials" aria-hidden="true">AU</span>
+                                    <span class="sr-only">User profile</span>
+                                </div>
+                                <span id="profileUserName" class="hidden md:inline-block text-sm font-medium text-gray-700">Loading...</span>
+                                <i class="fas fa-chevron-down text-xs text-gray-500 hidden md:inline-block" aria-hidden="true"></i>
+                            </button>
+                            <!-- Dropdown menu -->
+                            <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50" role="menu" aria-orientation="vertical" aria-labelledby="profileMenuButton">
+                                <a href="profile.html" role="menuitem" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none">
+                                    <i class="fas fa-user-circle mr-2" aria-hidden="true"></i>Your Profile
+                                </a>
+                                <a href="settings.html" role="menuitem" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none">
+                                    <i class="fas fa-cog mr-2" aria-hidden="true"></i>Settings
+                                </a>
+                                <div class="border-t border-gray-100 my-1" role="separator"></div>
+                                <a href="#" id="topNavSignOut" role="menuitem" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 focus:bg-red-50 focus:outline-none">
+                                    <i class="fas fa-sign-out-alt mr-2" aria-hidden="true"></i>Sign out
+                                    <span class="sr-only">Sign out</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Stats Cards -->
+                    <div class="bg-white rounded-lg shadow p-5 hover:shadow-md transition-shadow border-l-4 border-blue-500">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">Upcoming Meetings</p>
+                                <p class="text-2xl font-bold mt-1" id="statUpcoming">0</p>
+                                <p class="text-xs text-gray-500 mt-2" id="statUpcomingToday">0 meetings today</p>
+                            </div>
+                            <div class="p-3 rounded-lg bg-blue-50 text-blue-600">
+                                <i class="fas fa-calendar-day text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-5 hover:shadow-md transition-shadow border-l-4 border-amber-500">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">Pending Approvals</p>
+                                <p class="text-2xl font-bold mt-1" id="statPending">0</p>
+                                <div class="flex items-center mt-2">
+                                    <span id="statPendingDelta" class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+                                        <i class="fas fa-arrow-up mr-1"></i> 0 from yesterday
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-amber-50 text-amber-600">
+                                <i class="fas fa-clock text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-5 hover:shadow-md transition-shadow border-l-4 border-purple-500">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">Rooms</p>
+                                <p class="text-2xl font-bold mt-1">—</p>
+                                <p class="text-xs text-gray-500 mt-2">No data</p>
+                            </div>
+                            <div class="p-3 rounded-lg bg-purple-50 text-purple-600">
+                                <i class="fas fa-door-closed text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-5 hover:shadow-md transition-shadow border-l-4 border-green-500">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">Users</p>
+                                <p class="text-2xl font-bold mt-1" id="statUsers">0</p>
+                                <div class="flex items-center mt-2">
+                                    <span class="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+                                        <i class="fas fa-arrow-up mr-1"></i> 12% this month
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-green-50 text-green-600">
+                                <i class="fas fa-users text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
+                                <i class="fas fa-clock text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">Pending Approvals</p>
+                                <p class="text-2xl font-bold" id="statPendingSmall">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Meetings -->
+                    <div class="bg-white rounded-lg shadow p-6 md:col-span-2 lg:col-span-3">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold">Recent Meetings</h3>
+                            <a href="meetings.html" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View All</a>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead>
+                                    <tr class="text-left text-gray-500 text-sm">
+                                        <th class="pb-2 font-medium">Title</th>
+                                        <th class="pb-2 font-medium">Date</th>
+                                        <th class="pb-2 font-medium">Time</th>
+                                        <th class="pb-2 font-medium">Location</th>
+                                        <th class="pb-2 font-medium">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentMeetingsBody" class="divide-y divide-gray-200"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            <section id="incomingMeetings" class="mt-6">
+                <h3 class="text-lg font-semibold mb-4">Incoming Meetings</h3>
+                <div id="incomingMeetingsGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+            </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Profile Edit Modal -->
+    <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg w-full max-w-md mx-4">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Edit Profile</h3>
+                    <button onclick="closeModal('profileModal')" class="text-gray-500 hover:text-gray-700" aria-label="Close profile modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="profileForm" class="space-y-4">
+                    <div>
+                    <div>
+    <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+    <input 
+        id="fullName"
+        name="fullName"
+        type="text" 
+        value="Admin User" 
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+        aria-required="true"
+        placeholder="Enter your full name">
+</div>
+<div>
+    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+    <input 
+        id="email"
+        name="email"
+        type="email" 
+        value="admin@smartmeet.unza" 
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+        aria-required="true"
+        placeholder="Enter your email address">
+</div>                    </div>
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" onclick="closeModal('profileModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="passwordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg w-full max-w-md mx-4">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Change Password</h3>
+                    <button onclick="closeModal('passwordModal')" class="text-gray-500 hover:text-gray-700" aria-label="Close password modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="passwordForm" class="space-y-4">
+                    <div>
+                    <div>
+    <label for="currentPassword" class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+    <input 
+        id="currentPassword"
+        name="currentPassword"
+        type="password" 
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+        aria-required="true"
+        placeholder="Enter your current password"
+        autocomplete="current-password">
+</div>
+<div>
+    <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+    <input 
+        id="newPassword"
+        name="newPassword"
+        type="password" 
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+        aria-required="true"
+        placeholder="Enter a new password"
+        autocomplete="new-password"
+        minlength="8"
+        aria-describedby="password-requirements">
+    <p id="password-requirements" class="mt-1 text-xs text-gray-500">
+        Must be at least 8 characters long
+    </p>
+</div>
+<div>
+    <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+    <input 
+        id="confirmPassword"
+        name="confirmPassword"
+        type="password" 
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+        aria-required="true"
+        placeholder="Confirm your new password"
+        autocomplete="new-password">
+</div>                    </div>
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" onclick="closeModal('passwordModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                            Update Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('fixed') && event.target.classList.contains('inset-0')) {
+                event.target.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        };
+
+        // Profile Photo Upload
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileImage = document.getElementById('profileImage');
+            const defaultAvatar = document.getElementById('defaultAvatar');
+            const fileInput = document.getElementById('profilePhotoUpload');
+
+            // Restore saved profile photo
+            try {
+                const savedPhoto = localStorage.getItem('sm_profile_photo');
+                if (savedPhoto && profileImage) {
+                    profileImage.src = savedPhoto;
+                    profileImage.classList.remove('hidden');
+                    if (defaultAvatar) defaultAvatar.classList.add('hidden');
+                }
+            } catch(e){}
+
+            // Profile dropdown toggle
+            const profileBtn = document.getElementById('profileBtn');
+            const profileMenu = document.getElementById('profileMenu');
+            function toggleProfileMenu(show){
+                if (!profileMenu) return;
+                const open = show !== undefined ? show : profileMenu.classList.contains('hidden');
+                if (open) profileMenu.classList.remove('hidden'); else profileMenu.classList.add('hidden');
+            }
+            if (profileBtn && profileMenu){
+                profileBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleProfileMenu(); });
+                document.addEventListener('click', (e)=>{ if (!profileMenu.classList.contains('hidden')){ const within = profileMenu.contains(e.target) || profileBtn.contains(e.target); if (!within) toggleProfileMenu(false); } });
+                document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') toggleProfileMenu(false); });
+            }
+
+            // Handle Change Photo in dropdown
+            // Change Photo uses a label tied to the file input; no JS needed to trigger dialog
+            const changePhotoLink = document.getElementById('changePhotoLink');
+            // Edit Credentials / Change Password open modals
+            document.getElementById('editCredentialsLink')?.addEventListener('click', function(e){ e.preventDefault(); toggleProfileMenu(false); openModal('profileModal'); });
+            document.getElementById('changePasswordLink')?.addEventListener('click', function(e){ e.preventDefault(); toggleProfileMenu(false); openModal('passwordModal'); });
+            // Sign out
+            document.getElementById('signOutBtn')?.addEventListener('click', ()=>{ try{ localStorage.removeItem('sm_role_v1'); localStorage.removeItem('userLoggedIn'); localStorage.removeItem('userRole'); localStorage.removeItem('userEmail'); sessionStorage.removeItem('userLoggedIn'); sessionStorage.removeItem('userRole'); sessionStorage.removeItem('userEmail'); localStorage.removeItem('adminLoggedIn'); sessionStorage.removeItem('adminLoggedIn'); }catch(e){} window.location.href='../auth/login.html'; });
+
+            // Handle file upload
+            fileInput && fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        // Show the image and hide the default avatar
+                        if (profileImage) {
+                            profileImage.src = event.target.result;
+                            profileImage.classList.remove('hidden');
+                        }
+                        if (defaultAvatar) defaultAvatar.classList.add('hidden');
+                        try { localStorage.setItem('sm_profile_photo', event.target.result); } catch(err){}
+                        showToast('Profile photo updated successfully', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            
+            // Form submissions
+            const profileForm = document.getElementById('profileForm');
+            if (profileForm) {
+                profileForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // Add form submission logic here
+                    closeModal('profileModal');
+                    showToast('Profile updated successfully', 'success');
+                });
+            }
+
+            const passwordForm = document.getElementById('passwordForm');
+            if (passwordForm) {
+                passwordForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // Add password change logic here
+                    closeModal('passwordModal');
+                    showToast('Password updated successfully', 'success');
+                });
+            }
+        });
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 px-6 py-3 rounded-md text-white font-medium shadow-lg ${
+                type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            }`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    </script>
+<script>
+(function(){
+  const MEETINGS_KEY = 'sm_meetings_v1';
+  const USERS_KEY = 'sm_users_v1';
+
+  function load(key){
+    try { return JSON.parse(localStorage.getItem(key) || '[]'); }
+    catch(e){ return []; }
+  }
+  function todayStr(){ const d=new Date(); const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const day=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`; }
+  function el(id){ return document.getElementById(id); }
+
+  function renderStats(){
+    const meetings = load(MEETINGS_KEY);
+    const users = load(USERS_KEY);
+    const today = todayStr();
+
+    const upcoming = meetings.filter(m => (m.status||'Scheduled')==='Scheduled' && m.date >= today).length;
+    const todayCount = meetings.filter(m => m.date === today).length;
+    const pending = meetings.filter(m => (m.status||'Scheduled')==='Pending').length;
+    let usersCount = users.length;
+    try {
+      const me = (localStorage.getItem('userEmail') || sessionStorage.getItem('userEmail') || '').toLowerCase();
+      if (me) usersCount = users.filter(u => ((u.email||'').toLowerCase()===me) || ((u.createdByEmail||'').toLowerCase()===me)).length;
+    } catch(e){}
+
+    if (el('statUpcoming')) el('statUpcoming').textContent = String(upcoming);
+    if (el('statUpcomingToday')) el('statUpcomingToday').textContent = `${todayCount} meeting${todayCount===1?'':'s'} today`;
+    if (el('statPending')) el('statPending').textContent = String(pending);
+    if (el('statPendingSmall')) el('statPendingSmall').textContent = String(pending);
+    if (el('statUsers')) el('statUsers').textContent = String(usersCount);
+    if (el('statPendingDelta')) el('statPendingDelta').innerHTML = `<i class="fas fa-arrow-up mr-1"></i> ${Math.max(0,pending)} from yesterday`;
+  }
+
+  function renderRecent(){
+    const meetings = load(MEETINGS_KEY);
+    const tbody = document.getElementById('recentMeetingsBody');
+    if (!tbody) return;
+
+    if (!meetings || meetings.length===0){
+      tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-gray-500">No meetings yet</td></tr>`;
+      return;
+    }
+
+    const sorted = meetings.slice().sort((a,b)=>{
+      const ad = (a.date||'') + ' ' + (a.startTime||'00:00');
+      const bd = (b.date||'') + ' ' + (b.startTime||'00:00');
+      return bd.localeCompare(ad); // newest first
+    }).slice(0,5);
+
+    tbody.innerHTML = sorted.map(m=>{
+      const time = `${m.startTime||''} - ${m.endTime||''}`.trim();
+      const location = m.type==='physical' ? (m.venue||'') : (m.link ? 'Online' : 'Virtual');
+      const status = (m.status||'Scheduled');
+      const statusClass = status==='Scheduled' ? 'bg-green-100 text-green-800' : (status==='Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800');
+      return `
+        <tr>
+          <td class="py-3">${m.title||'-'}</td>
+          <td class="py-3">${m.date||'-'}</td>
+          <td class="py-3">${time}</td>
+          <td class="py-3">${location||'-'}</td>
+          <td class="py-3"><span class="px-2 py-1 ${statusClass} text-xs rounded-full">${status}</span></td>
+        </tr>`;
+    }).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    renderStats();
+    renderRecent();
+    renderIncoming();
+  });
+function renderIncoming(){
+    const meetings = load(MEETINGS_KEY);
+    const container = document.getElementById('incomingMeetingsGrid');
+    const wrap = document.getElementById('incomingMeetings');
+    if (!wrap || !container) return;
+    const today = todayStr();
+    const upcoming = (meetings||[])
+      .filter(m => (m.status||'Scheduled')==='Scheduled' && (m.date||'') >= today)
+      .sort((a,b)=> ((a.date||'') + ' ' + (a.startTime||'00:00')).localeCompare((b.date||'') + ' ' + (b.startTime||'00:00')))
+      .slice(0,6);
+
+    if (upcoming.length === 0){
+      container.innerHTML = '<div class="bg-white rounded-lg border border-gray-100 p-8 text-center text-gray-500 col-span-full">No upcoming meetings</div>';
+      return;
+    }
+
+    container.innerHTML = upcoming.map(m => {
+      const isVirtual = m.type === 'virtual';
+      const venue = isVirtual ? (m.link ? 'Online' : 'Virtual') : (m.venue || '');
+      const joinBtn = isVirtual && m.link ? `<a class="inline-flex items-center px-3 py-1.5 rounded-md bg-emerald-600 text-white text-xs hover:bg-emerald-700" target="_blank" href="${m.link}"><i class="fab fa-google mr-2"></i>Join</a>` : '';
+      const typeBadge = isVirtual ? '<span class="px-2 py-0.5 rounded-full text-xs bg-blue-100 text-blue-800">Virtual</span>' : '<span class="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-700">Physical</span>';
+      const audienceStr = m.audience === 'specific' ? `${(m.participants||[]).length} invited` : (m.audience === 'admins' ? 'Admins' : 'All users');
+      return `
+        <div class="bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 overflow-hidden">
+          <div class="p-5">
+            <div class="flex items-start justify-between">
+              <h4 class="text-base font-semibold text-gray-900">${m.title || 'Meeting'}</h4>
+              <span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700">${m.status || 'Scheduled'}</span>
+            </div>
+            <div class="mt-3 space-y-2 text-sm text-gray-600">
+              <div class="flex items-center"><i class="far fa-calendar-alt mr-2 text-gray-400"></i>${m.date || '-'}</div>
+              <div class="flex items-center"><i class="far fa-clock mr-2 text-gray-400"></i>${m.startTime || ''} - ${m.endTime || ''}</div>
+              <div class="flex items-center"><i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>${venue}</div>
+            </div>
+            <div class="mt-4 flex items-center justify-between">
+              <div class="flex items-center gap-2">${typeBadge}<span class="px-2 py-0.5 rounded-full text-xs bg-indigo-100 text-indigo-800">${audienceStr}</span></div>
+              ${joinBtn}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+})();
+</script>
+<script>
+// Inject signed-in user credentials into the UI
+(function(){
+  document.addEventListener('DOMContentLoaded', function(){
+    try {
+      const name = localStorage.getItem('userName') || sessionStorage.getItem('userName') || 'Admin User';
+      const email = localStorage.getItem('userEmail') || sessionStorage.getItem('userEmail') || '';
+      const role = (localStorage.getItem('userRole') || sessionStorage.getItem('userRole') || 'admin').toLowerCase();
+      const roleLabel = role==='admin' ? 'Administrator' : (role==='studentadmin' ? 'Student Admin' : 'User');
+      const sn = document.getElementById('sidebarUserName'); if (sn) sn.textContent = name;
+      const se = document.getElementById('sidebarUserEmail'); if (se) se.textContent = email || roleLabel;
+      const pn = document.getElementById('profileUserName'); if (pn) pn.textContent = name;
+    } catch(e){}
+  });
+})();
+</script>
+<script>
+  // Responsive sidebar toggle
+  (function(){
+    document.addEventListener('DOMContentLoaded', function(){
+      var sidebar = document.getElementById('sidebar');
+      var sidebarToggle = document.getElementById('sidebarToggle');
+      var sidebarBackdrop = document.getElementById('sidebarBackdrop');
+      function openSidebar(){ if (sidebar) sidebar.classList.remove('-translate-x-full'); if (sidebarBackdrop) sidebarBackdrop.classList.remove('hidden'); }
+      function closeSidebar(){ if (sidebar) sidebar.classList.add('-translate-x-full'); if (sidebarBackdrop) sidebarBackdrop.classList.add('hidden'); }
+      sidebarToggle && sidebarToggle.addEventListener('click', function(e){ e.preventDefault(); openSidebar(); });
+      sidebarBackdrop && sidebarBackdrop.addEventListener('click', closeSidebar);
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeSidebar(); });
+      // Close when navigating via internal links
+      document.querySelectorAll('#sidebar a').forEach(function(a){ a.addEventListener('click', closeSidebar); });
+    });
+  })();
+</script>
+<script>
+  // Smooth page transitions and link prefetching
+  (function(){
+    // Inject minimal CSS for fade transitions
+    var STYLE_ID = 'sm-smooth-style';
+    if (!document.getElementById(STYLE_ID)){
+      var st = document.createElement('style');
+      st.id = STYLE_ID;
+      st.textContent = 'body.page-fade{opacity:0}body.page-fade.page-fade-in{opacity:1;transition:opacity .18s ease}body.page-fade.is-leaving{opacity:0}';
+      document.head.appendChild(st);
+    }
+
+    function sameOrigin(href){ try{ var u=new URL(href, window.location.href); return u.origin===window.location.origin; }catch(e){ return false; } }
+    function isAnchorLink(a){ var href=a.getAttribute('href')||''; return href.startsWith('#'); }
+
+    // Fade-in on load
+    document.addEventListener('DOMContentLoaded', function(){
+      document.body.classList.add('page-fade');
+      requestAnimationFrame(function(){ document.body.classList.add('page-fade-in'); });
+    });
+
+    // Intercept clicks on internal links for fade-out navigation
+    document.addEventListener('click', function(e){
+      var a = e.target.closest('a[href]');
+      if (!a) return;
+      if (a.target && a.target !== '' && a.target !== '_self') return;
+      if (a.hasAttribute('download')) return;
+      var href = a.getAttribute('href');
+      if (!href || isAnchorLink(a) || !sameOrigin(href)) return;
+      // Allow modifier keys to open new tab/window
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      document.body.classList.add('is-leaving');
+      setTimeout(function(){ window.location.href = href; }, 180);
+    });
+
+    // Prefetch on hover to improve perceived speed
+    var prefetched = new Set();
+    function prefetch(href){
+      try{
+        if (prefetched.has(href)) return;
+        var l=document.createElement('link'); l.rel='prefetch'; l.href=href; document.head.appendChild(l);
+        prefetched.add(href);
+      }catch(e){}
+    }
+    document.addEventListener('mouseover', function(e){ var a=e.target.closest('a[href]'); if(!a) return; var href=a.getAttribute('href')||''; if(sameOrigin(href) && !isAnchorLink(a)) prefetch(href); });
+    document.addEventListener('touchstart', function(e){ var a=e.target.closest('a[href]'); if(!a) return; var href=a.getAttribute('href')||''; if(sameOrigin(href) && !isAnchorLink(a)) prefetch(href); }, {passive:true});
+  })();
+</script>
+</body>
+</html>

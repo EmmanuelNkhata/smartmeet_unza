@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartMeet UNZA - User Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/public/css/styles.css">
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-green-800 text-white p-4 flex flex-col h-full">
+            <!-- Logo and Title -->
+            <div class="flex flex-col items-center py-4 border-b border-green-700 mb-6">
+                <div class="flex items-center justify-center space-x-2 mb-2">
+                    <span class="text-2xl font-bold">SmartMeet</span>
+                </div>
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md mb-2">
+                    <span class="text-green-800 font-bold text-xl">UNZA</span>
+                </div>
+                <p class="text-sm text-green-200">User Portal</p>
+            </div>
+            
+            <!-- User Info -->
+            <div class="flex items-center mb-8 p-2 bg-green-700 rounded">
+                <div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center mr-3">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <p class="font-medium" id="userEmailDisplay">User</p>
+                    <p class="text-xs text-green-200">Standard User</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center p-2 rounded hover:bg-green-700 bg-green-900">
+                    <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="book-room.html" class="flex items-center p-2 rounded hover:bg-green-700">
+                    <i class="fas fa-calendar-plus w-5 mr-3"></i>
+                    <span>Book a Room</span>
+                </a>
+                <a href="my-bookings.html" class="flex items-center p-2 rounded hover:bg-green-700">
+                    <i class="fas fa-calendar-check w-5 mr-3"></i>
+                    <span>My Bookings</span>
+                </a>
+                <a href="profile.html" class="flex items-center p-2 rounded hover:bg-green-700">
+                    <i class="fas fa-user w-5 mr-3"></i>
+                    <span>My Profile</span>
+                </a>
+            </nav>
+
+            <!-- Logout Button -->
+            <div class="mt-auto pt-4 border-t border-green-700">
+                <button id="logoutBtn" class="w-full flex items-center p-2 rounded hover:bg-green-700 text-left">
+                    <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm p-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <button id="notificationsBtn" class="p-2 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-bell text-gray-600"></i>
+                                <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <button id="profileBtn" class="flex items-center space-x-2 focus:outline-none">
+                                <div class="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white">
+                                    <span id="userInitial">U</span>
+                                </div>
+                                <span class="text-sm font-medium text-gray-700">User</span>
+                                <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                            </button>
+                            <!-- Profile Dropdown -->
+                            <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                                <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-user mr-2"></i>Profile
+                                </a>
+                                <a href="settings.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-cog mr-2"></i>Settings
+                                </a>
+                                <div class="border-t border-gray-100 my-1"></div>
+                                <button id="logoutMenuBtn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="mb-8">
+                    <h1 class="text-2xl font-bold text-gray-800 mb-2">Welcome back, <span id="welcomeUser">User</span>!</h1>
+                    <p class="text-gray-600">Here's what's happening with your bookings today.</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+                                <i class="fas fa-calendar-check text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">Upcoming Bookings</p>
+                                <p class="text-2xl font-bold text-gray-800">3</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+                                <i class="fas fa-clock text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">Pending Approvals</p>
+                                <p class="text-2xl font-bold text-gray-800">1</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
+                                <i class="fas fa-history text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">Past Bookings</p>
+                                <p class="text-2xl font-bold text-gray-800">12</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Bookings -->
+                <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-lg font-medium text-gray-900">Upcoming Bookings</h3>
+                    </div>
+                    <div class="divide-y divide-gray-200">
+                        <!-- Booking Item -->
+                        <div class="p-6 hover:bg-gray-50">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <h4 class="text-md font-medium text-gray-900">Team Meeting</h4>
+                                            <p class="text-sm text-gray-500">Conference Room A</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 md:mt-0 md:ml-6">
+                                    <div class="flex items-center text-sm text-gray-500">
+                                        <i class="far fa-calendar-alt mr-2"></i>
+                                        <span>Tomorrow, 10:00 AM - 11:30 AM</span>
+                                    </div>
+                                    <div class="mt-1 flex items-center text-sm text-gray-500">
+                                        <i class="fas fa-user-friends mr-2"></i>
+                                        <span>5 attendees</span>
+                                    </div>
+                                </div>
+                                <div class="mt-4 md:mt-0">
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Confirmed
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- More booking items would go here -->
+                    </div>
+                    <div class="bg-gray-50 px-6 py-4 text-right">
+                        <a href="my-bookings.html" class="text-sm font-medium text-green-600 hover:text-green-500">
+                            View all bookings
+                        </a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Authentication check
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('userLoggedIn') || sessionStorage.getItem('userLoggedIn');
+            const userEmail = localStorage.getItem('userEmail') || sessionStorage.getItem('userEmail') || 'User';
+            
+            if (!isLoggedIn) {
+                window.location.href = '../auth/login.html';
+                return;
+            }
+
+            // Update UI with user info
+            const userInitial = userEmail.charAt(0).toUpperCase();
+            document.getElementById('userInitial').textContent = userInitial;
+            document.getElementById('welcomeUser').textContent = userEmail.split('@')[0];
+            document.getElementById('userEmailDisplay').textContent = userEmail;
+            
+            // Set up logout functionality
+            const logout = () => {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                sessionStorage.removeItem('userLoggedIn');
+                sessionStorage.removeItem('userEmail');
+                window.location.href = '../auth/login.html';
+            };
+
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            document.getElementById('logoutMenuBtn').addEventListener('click', logout);
+
+            // Toggle profile menu
+            const profileBtn = document.getElementById('profileBtn');
+            const profileMenu = document.getElementById('profileMenu');
+            
+            if (profileBtn && profileMenu) {
+                profileBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    profileMenu.classList.toggle('hidden');
+                });
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!profileMenu.classList.contains('hidden') && 
+                        !profileBtn.contains(e.target) && 
+                        !profileMenu.contains(e.target)) {
+                        profileMenu.classList.add('hidden');
+                    }
+                });
+                
+                // Close menu with Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && !profileMenu.classList.contains('hidden')) {
+                        profileMenu.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

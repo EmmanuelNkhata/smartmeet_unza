@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics - SmartMeet UNZA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-blue-800 text-white p-4 flex flex-col h-full">
+            <!-- Logo and Title -->
+            <div class="flex flex-col items-center py-4 border-b border-blue-700 mb-6">
+                <div class="flex items-center justify-center space-x-2 mb-2">
+                    <span class="text-2xl font-bold">SmartMeet</span>
+                </div>
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md mb-2">
+                    <span class="text-blue-800 font-bold text-xl">UNZA</span>
+                </div>
+                <p class="text-sm text-blue-200">Administration Panel</p>
+            </div>
+            
+            <!-- User Info -->
+            <div class="flex items-center mb-8 p-2 bg-blue-700 rounded">
+                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <p class="font-medium">Admin User</p>
+                    <p class="text-xs text-blue-200">Administrator</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="space-y-2">
+                <a href="index.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="meetings.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-calendar-alt w-5 mr-3"></i>
+                    <span>Meetings</span>
+                </a>
+                <a href="room-booking.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-door-open w-5 mr-3"></i>
+                    <span>Room Booking</span>
+                </a>
+                <a href="users.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-users w-5 mr-3"></i>
+                    <span>Users & Roles</span>
+                </a>
+                <a href="documents.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-file-alt w-5 mr-3"></i>
+                    <span>Documents</span>
+                </a>
+                <a href="reports.html" class="flex items-center p-2 rounded bg-blue-900">
+                    <i class="fas fa-chart-bar w-5 mr-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="notifications.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-bell w-5 mr-3"></i>
+                    <span>Notifications</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar Sign out (bottom) -->
+            <div class="mt-auto pt-4 border-t border-blue-700">
+                <button id="signOutBtn" class="w-full flex items-center p-2 rounded hover:bg-blue-700 text-red-100">
+                    <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                    <span>Sign out</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white shadow-sm p-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-semibold text-gray-800">Reports & Analytics</h2>
+                    <div></div>
+                </div>
+            </header>
+
+            <!-- Reports Content (demo removed) -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="bg-white rounded-lg border border-gray-100 p-8 text-center text-gray-500">
+                    No reports available
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="js/common-ui.js"></script>
+</body>
+</html>

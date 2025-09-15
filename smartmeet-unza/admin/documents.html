@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Documents - SmartMeet UNZA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-blue-800 text-white p-4 flex flex-col h-full">
+            <!-- Logo and Title -->
+            <div class="flex flex-col items-center py-4 border-b border-blue-700 mb-6">
+                <div class="flex items-center justify-center space-x-2 mb-2">
+                    <span class="text-2xl font-bold">SmartMeet</span>
+                </div>
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md mb-2">
+                    <span class="text-blue-800 font-bold text-xl">UNZA</span>
+                </div>
+                <p class="text-sm text-blue-200">Administration Panel</p>
+            </div>
+
+            <!-- User Info -->
+            <div class="flex items-center mb-8 p-2 bg-blue-700 rounded">
+                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <p class="font-medium">Admin User</p>
+                    <p class="text-xs text-blue-200">Administrator</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="space-y-2">
+                <a href="index.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="meetings.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-calendar-alt w-5 mr-3"></i>
+                    <span>Meetings</span>
+                </a>
+                <a href="room-booking.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-door-open w-5 mr-3"></i>
+                    <span>Room Booking</span>
+                </a>
+                <a href="users.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-users w-5 mr-3"></i>
+                    <span>Users & Roles</span>
+                </a>
+                <a href="documents.html" class="flex items-center p-2 rounded bg-blue-900">
+                    <i class="fas fa-file-alt w-5 mr-3"></i>
+                    <span>Documents</span>
+                </a>
+                <a href="reports.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-chart-bar w-5 mr-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="notifications.html" class="flex items-center p-2 rounded hover:bg-blue-700" id="sidebarNotifications">
+                    <i class="fas fa-bell w-5 mr-3"></i>
+                    <span>Notifications</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar Sign out (bottom) -->
+            <div class="mt-auto pt-4 border-t border-blue-700">
+                <button id="signOutBtn" class="w-full flex items-center p-2 rounded hover:bg-blue-700 text-red-100">
+                    <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                    <span>Sign out</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white shadow-sm p-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-semibold text-gray-800">Document Management</h2>
+                    <div class="flex items-center space-x-4">
+                        
+                        <!-- Role Selector -->
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-500">Role:</span>
+                            <select id="roleSelect" class="text-sm border rounded-md p-1">
+                                <option value="admin">Admin/Organizer</option>
+                                <option value="participant">Participant</option>
+                            </select>
+                        </div>
+
+                        <!-- Upload Button (shown only for admin) -->
+                        <button id="uploadBtn" type="button" onclick="openUploadModal()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center">
+                            <i class="fas fa-upload mr-2"></i>
+                            <span>Upload Document</span>
+                        </button>
+
+                                            </div>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Search and Filter Bar -->
+                <div class="bg-white p-4 rounded-lg shadow mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+                        <div class="md:col-span-2 relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text" id="searchInput" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md" placeholder="Search documents..." />
+                        </div>
+                        <div>
+                            <select id="typeFilter" class="w-full p-2 border rounded-md text-sm">
+                                <option value="">All Types</option>
+                                <option value="agenda">Agenda</option>
+                                <option value="minutes">Minutes</option>
+                                <option value="attachment">Attachment</option>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="text" id="uploaderFilter" class="w-full p-2 border rounded-md text-sm" placeholder="Filter by uploader" />
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input type="date" id="dateFrom" class="w-1/2 p-2 border rounded-md text-sm" />
+                            <input type="date" id="dateTo" class="w-1/2 p-2 border rounded-md text-sm" />
+                        </div>
+                        <div class="md:col-span-5 flex justify-end">
+                            <button id="resetFilters" class="px-3 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">
+                                <i class="fas fa-redo mr-1"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents Grid View -->
+                <div id="documentsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+
+                <!-- No Documents Message -->
+                <div id="noDocuments" class="hidden text-center py-12">
+                    <i class="fas fa-folder-open text-4xl text-gray-300 mb-2"></i>
+                    <p class="text-gray-500">No documents found</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg w-full max-w-2xl">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-lg font-medium">Upload Document</h3>
+                <button id="closeUploadModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Document Type</label>
+                    <select id="docType" class="w-full p-2 border rounded-md">
+                        <option value="agenda">Agenda (before)</option>
+                        <option value="minutes">Minutes (after)</option>
+                        <option value="attachment">Attachment (presentations, spreadsheets, images)</option>
+                    </select>
+                </div>
+                <div id="attachmentSubtypeRow" class="hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Attachment Subtype</label>
+                    <select id="attachmentSubtype" class="w-full p-2 border rounded-md">
+                        <option value="presentation">Presentation</option>
+                        <option value="spreadsheet">Spreadsheet</option>
+                        <option value="image">Image</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Select File(s)</label>
+                    <input type="file" id="fileInput" class="w-full" multiple />
+                    <p class="text-xs text-gray-500 mt-2">Allowed: PDF, DOCX, PPTX, XLSX, PNG, JPG • Max size: 10 MB per file</p>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button id="cancelUpload" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Cancel</button>
+                    <button id="uploadSubmit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg w-full max-w-4xl h-5/6 flex flex-col">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h3 id="previewTitle" class="text-lg font-medium">Document Preview</h3>
+                <button id="closePreviewModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-auto p-4">
+                <div id="previewContainer" class="w-full h-full flex items-center justify-center bg-gray-50 rounded">
+                    <!-- Dynamic preview injected here -->
+                </div>
+            </div>
+            <div class="p-4 border-t flex justify-end space-x-2">
+                <a id="downloadCurrentBtn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center" href="#" download>
+                    <i class="fas fa-download mr-2"></i>
+                    <span>Download</span>
+                </a>
+                <button id="closePreviewModalBottom" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Versions Modal -->
+    <div id="versionsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg w-full max-w-3xl max-h-[80vh] flex flex-col">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h3 id="versionsTitle" class="text-lg font-medium">Versions</h3>
+                <button id="closeVersionsModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-auto p-4" id="versionsList">
+                <!-- Versions list injected here -->
+            </div>
+            <div class="p-4 border-t flex justify-end">
+                <button id="closeVersionsModalBottom" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store keys
+        const STORE_KEYS = {
+            docs: 'sm_docs_v1',
+            notifs: 'sm_notifs_v1',
+            role: 'sm_role_v1',
+        };
+
+        const ALLOWED_EXT = ['pdf', 'docx', 'pptx', 'xlsx', 'png', 'jpg', 'jpeg'];
+        const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
+
+        // State
+        let documents = [];
+        let notifications = [];
+        let role = 'admin';
+
+        // Helpers
+        const $ = (sel, root = document) => root.querySelector(sel);
+        const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+        const nowISO = () => new Date().toISOString();
+        const formatDate = (iso) => new Date(iso).toLocaleString();
+        const formatShortDate = (iso) => new Date(iso).toLocaleDateString();
+        const formatSize = (bytes) => {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        };
+        const slugify = (str) => str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        const getExt = (name) => (name.split('.').pop() || '').toLowerCase();
+        const isPreviewable = (ext) => ['pdf', 'png', 'jpg', 'jpeg'].includes(ext);
+        const fileIcon = (ext) => ({
+            pdf: 'fas fa-file-pdf text-red-500',
+            docx: 'fas fa-file-word text-blue-600',
+            pptx: 'fas fa-file-powerpoint text-orange-500',
+            xlsx: 'fas fa-file-excel text-green-600',
+            jpg: 'fas fa-file-image text-purple-500',
+            jpeg: 'fas fa-file-image text-purple-500',
+            png: 'fas fa-file-image text-purple-500',
+            default: 'fas fa-file text-gray-500',
+        })[ext] || 'fas fa-file text-gray-500';
+
+        // Persistence
+        function loadState() {
+            try {
+                const d = localStorage.getItem(STORE_KEYS.docs);
+                documents = d ? JSON.parse(d) : [];
+            } catch (e) { documents = []; }
+            try {
+                const n = localStorage.getItem(STORE_KEYS.notifs);
+                notifications = n ? JSON.parse(n) : [];
+            } catch (e) { notifications = []; }
+            try {
+                role = localStorage.getItem(STORE_KEYS.role) || 'admin';
+            } catch (e) { role = 'admin'; }
+        }
+        function saveDocs() { localStorage.setItem(STORE_KEYS.docs, JSON.stringify(documents)); }
+        function saveNotifs() { localStorage.setItem(STORE_KEYS.notifs, JSON.stringify(notifications)); }
+        function saveRole() { localStorage.setItem(STORE_KEYS.role, role); }
+
+        // Notifications
+        function addNotification(text) {
+            notifications.unshift({ id: crypto.randomUUID(), text, timestamp: nowISO(), unread: true });
+            saveNotifs();
+            renderNotifications();
+        }
+        function renderNotifications() {
+            const count = notifications.filter(n => n.unread).length;
+            const badge = $('#notifCountBadge');
+            if (badge) {
+                if (count > 0) {
+                    badge.textContent = String(count);
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+            const container = $('#notifItems');
+            if (container) {
+                container.innerHTML = notifications.length === 0
+                    ? '<div class="px-4 py-6 text-center text-sm text-gray-500">No notifications</div>'
+                    : notifications.map(n => `
+                        <div class="px-4 py-3 ${n.unread ? 'bg-blue-50' : ''} border-b border-gray-100">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 pt-1">
+                                    <div class="w-2 h-2 ${n.unread ? 'bg-blue-500' : 'bg-transparent'} rounded-full"></div>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm ${n.unread ? 'font-medium text-gray-900' : 'text-gray-800'}">${n.text}</p>
+                                    <p class="text-xs text-gray-400 mt-1">${formatDate(n.timestamp)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+            }
+        }
+
+        // Role UI
+        function applyRoleUI() {
+            $('#roleSelect').value = role;
+            if (role === 'admin') {
+                $('#uploadBtn').classList.remove('hidden');
+            } else {
+                $('#uploadBtn').classList.add('hidden');
+            }
+            // Hide destructive actions for participants
+            $$('.doc-delete-btn').forEach(btn => btn.classList.toggle('hidden', role !== 'admin'));
+        }
+
+        // Documents rendering
+        function renderDocuments(list) {
+            const grid = $('#documentsGrid');
+            const noDocs = $('#noDocuments');
+            if (!list || list.length === 0) {
+                grid.innerHTML = '';
+                noDocs.classList.remove('hidden');
+                return;
+            }
+            noDocs.classList.add('hidden');
+            grid.innerHTML = list.map(doc => {
+                const latest = doc.versions[doc.versions.length - 1];
+                const ext = latest.ext;
+                const typeBadge = doc.type === 'agenda' ? 'bg-blue-100 text-blue-800' : (doc.type === 'minutes' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800');
+                const typeLabel = doc.type === 'agenda' ? 'Agenda' : (doc.type === 'minutes' ? 'Minutes' : `Attachment${doc.subtype ? ' · ' + capitalize(doc.subtype) : ''}`);
+                return `
+                <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-200">
+                    <div class="p-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="h-12 w-12 rounded-md bg-gray-100 flex items-center justify-center">
+                                    <i class="${fileIcon(ext)} text-xl"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4 flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-sm font-medium text-gray-900 truncate" title="${latest.displayName}">${latest.displayName}</h3>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${typeBadge}">${typeLabel}</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">v${latest.version} • ${formatShortDate(latest.createdAt)} • ${latest.uploader} • ${ext.toUpperCase()} • ${formatSize(latest.size)}</p>
+                                ${doc.versions.length > 1 ? `<p class="text-[11px] text-gray-400 mt-1">${doc.versions.length} versions</p>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-2 flex justify-between items-center">
+                        <div class="flex space-x-2">
+                            <button data-doc-id="${doc.id}" class="doc-preview-btn text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                <i class="far fa-eye mr-1"></i> Preview
+                            </button>
+                            <a ${latest.url ? `href="${latest.url}"` : ''} download="${latest.displayName}" class="text-gray-600 hover:text-gray-800 text-sm font-medium ${latest.url ? '' : 'opacity-50 cursor-not-allowed'}">
+                                <i class="fas fa-download mr-1"></i> Download
+                            </a>
+                        </div>
+                        <div class="flex space-x-2 items-center">
+                            <button data-doc-id="${doc.id}" class="doc-versions-btn text-gray-600 hover:text-gray-900 text-sm">
+                                <i class="fas fa-code-branch mr-1"></i> Versions
+                            </button>
+                            <button data-doc-id="${doc.id}" class="doc-delete-btn text-red-600 hover:text-red-800 text-sm ${role === 'admin' ? '' : 'hidden'}">
+                                <i class="far fa-trash-alt mr-1"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            // Wire actions
+            $$('.doc-preview-btn', grid).forEach(btn => btn.addEventListener('click', () => openPreview(btn.dataset.docId)));
+            $$('.doc-versions-btn', grid).forEach(btn => btn.addEventListener('click', () => openVersions(btn.dataset.docId)));
+            $$('.doc-delete-btn', grid).forEach(btn => btn.addEventListener('click', () => deleteDocumentSeries(btn.dataset.docId)));
+        }
+
+        function capitalize(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+        // Filtering
+        function applyFilters() {
+            const term = $('#searchInput').value.trim().toLowerCase();
+            const type = $('#typeFilter').value;
+            const uploader = $('#uploaderFilter').value.trim().toLowerCase();
+            const from = $('#dateFrom').value ? new Date($('#dateFrom').value) : null;
+            const to = $('#dateTo').value ? new Date($('#dateTo').value) : null;
+
+            const filtered = documents.filter(doc => {
+                const latest = doc.versions[doc.versions.length - 1];
+                const text = `${latest.displayName} ${latest.uploader}`.toLowerCase();
+                const matchesText = term === '' || text.includes(term);
+                const matchesType = !type || doc.type === type;
+                const matchesUploader = uploader === '' || latest.uploader.toLowerCase().includes(uploader);
+                const created = new Date(latest.createdAt);
+                const matchesFrom = !from || created >= from;
+                const matchesTo = !to || created <= new Date(to.getFullYear(), to.getMonth(), to.getDate(), 23, 59, 59, 999);
+                return matchesText && matchesType && matchesUploader && matchesFrom && matchesTo;
+            });
+
+            renderDocuments(filtered);
+            applyRoleUI();
+        }
+
+        // Upload flow
+        function openUploadModal() {
+            $('#uploadModal').classList.remove('hidden');
+            $('#uploadModal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeUploadModal() {
+            $('#uploadModal').classList.add('hidden');
+            $('#uploadModal').classList.remove('flex');
+            document.body.style.overflow = 'auto';
+            $('#fileInput').value = '';
+            $('#docType').value = 'agenda';
+            $('#attachmentSubtypeRow').classList.add('hidden');
+        }
+
+        async function handleUpload() {
+            if (role !== 'admin') {
+                alert('Only Admin/Organizer can upload.');
+                return;
+            }
+            const type = $('#docType').value;
+            const subtype = $('#attachmentSubtype').value;
+            const input = $('#fileInput');
+            const files = Array.from(input.files || []);
+            if (files.length === 0) {
+                alert('Select at least one file.');
+                return;
+            }
+            if ((type === 'agenda' || type === 'minutes') && files.length > 1) {
+                alert('Please select a single file for Agenda/Minutes.');
+                return;
+            }
+
+            const accepted = [];
+            for (const file of files) {
+                const ext = getExt(file.name);
+                if (!ALLOWED_EXT.includes(ext)) {
+                    alert(`File not allowed: ${file.name}`);
+                    continue;
+                }
+                if (file.size > MAX_SIZE) {
+                    alert(`File too large (max 10MB): ${file.name}`);
+                    continue;
+                }
+                accepted.push(file);
+            }
+            if (accepted.length === 0) return;
+
+            // Process files
+            for (const file of accepted) {
+                const ext = getExt(file.name);
+                const base = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+                const baseSlug = type === 'agenda' || type === 'minutes' ? type : slugify(base);
+                const seriesId = type === 'agenda' || type === 'minutes' ? type : `attachment:${baseSlug}`;
+
+                let series = documents.find(d => d.id === seriesId);
+                if (!series) {
+                    series = {
+                        id: seriesId,
+                        type,
+                        subtype: type === 'attachment' ? (subtype || 'other') : undefined,
+                        slug: baseSlug,
+                        versions: [],
+                    };
+                    documents.push(series);
+                } else {
+                    // If attachment and subtype changed, keep the first known subtype
+                    if (type === 'attachment' && !series.subtype) series.subtype = (subtype || 'other');
+                }
+
+                const version = (series.versions[series.versions.length - 1]?.version || 0) + 1;
+                const timestamp = nowISO();
+                const displayName = `${baseSlug}-${timestamp.replace(/[:T.-]/g, '').slice(0, 14)}.${ext}`;
+                const url = URL.createObjectURL(file); // session-only preview/download
+
+                series.versions.push({
+                    id: crypto.randomUUID(),
+                    version,
+                    fileName: file.name,
+                    displayName,
+                    ext,
+                    size: file.size,
+                    mime: file.type,
+                    uploader: 'Admin User',
+                    createdAt: timestamp,
+                    url,
+                    previewable: isPreviewable(ext),
+                });
+
+                const label = type === 'agenda' ? 'Agenda' : (type === 'minutes' ? 'Minutes' : 'Attachment');
+                addNotification(`${label} ${type !== 'attachment' ? '' : '(' + base + ')'} uploaded v${version}`);
+            }
+
+            saveDocs();
+            closeUploadModal();
+            applyFilters();
+        }
+
+        // Preview
+        function openPreview(docId) {
+            const doc = documents.find(d => d.id === docId);
+            if (!doc) return;
+            const latest = doc.versions[doc.versions.length - 1];
+            $('#previewTitle').textContent = `${doc.type === 'agenda' ? 'Agenda' : doc.type === 'minutes' ? 'Minutes' : 'Attachment'} - v${latest.version}`;
+
+            const container = $('#previewContainer');
+            container.innerHTML = '';
+
+            if (latest.previewable && latest.url) {
+                if (['png', 'jpg', 'jpeg'].includes(latest.ext)) {
+                    const img = document.createElement('img');
+                    img.src = latest.url;
+                    img.alt = latest.displayName;
+                    img.className = 'max-h-full max-w-full';
+                    container.appendChild(img);
+                } else if (latest.ext === 'pdf') {
+                    const embed = document.createElement('embed');
+                    embed.src = latest.url;
+                    embed.type = 'application/pdf';
+                    embed.className = 'w-full h-[70vh]';
+                    container.appendChild(embed);
+                }
+            } else {
+                const div = document.createElement('div');
+                div.className = 'text-center text-gray-600 p-8';
+                div.innerHTML = `
+                    <i class="${fileIcon(latest.ext)} text-5xl mb-3"></i>
+                    <p>No inline preview available for .${latest.ext.toUpperCase()} files.</p>
+                `;
+                container.appendChild(div);
+            }
+
+            const dl = $('#downloadCurrentBtn');
+            if (latest.url) {
+                dl.href = latest.url;
+                dl.download = latest.displayName;
+                dl.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                dl.href = '#';
+                dl.classList.add('opacity-50', 'pointer-events-none');
+            }
+
+            $('#previewModal').classList.remove('hidden');
+            $('#previewModal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+        function closePreview() {
+            $('#previewModal').classList.add('hidden');
+            $('#previewModal').classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Versions
+        function openVersions(docId) {
+            const doc = documents.find(d => d.id === docId);
+            if (!doc) return;
+            $('#versionsTitle').textContent = `Versions - ${doc.type === 'agenda' ? 'Agenda' : doc.type === 'minutes' ? 'Minutes' : 'Attachment'}${doc.type === 'attachment' ? ' (' + doc.slug + ')' : ''}`;
+
+            const list = $('#versionsList');
+            list.innerHTML = doc.versions.slice().reverse().map(v => `
+                <div class="flex items-center justify-between border-b py-3">
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">v${v.version} • ${v.displayName}</p>
+                        <p class="text-xs text-gray-500">${formatDate(v.createdAt)} • ${v.uploader} • ${v.ext.toUpperCase()} • ${formatSize(v.size)}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button data-doc-id="${doc.id}" data-ver="${v.version}" class="ver-preview px-2 py-1 text-blue-600 hover:text-blue-800 text-sm"><i class="far fa-eye mr-1"></i>Preview</button>
+                        <a ${v.url ? `href="${v.url}"` : ''} download="${v.displayName}" class="px-2 py-1 text-gray-700 hover:text-gray-900 text-sm ${v.url ? '' : 'opacity-50 cursor-not-allowed'}"><i class="fas fa-download mr-1"></i>Download</a>
+                        <button data-doc-id="${doc.id}" data-ver="${v.version}" class="ver-delete px-2 py-1 text-red-600 hover:text-red-800 text-sm ${role === 'admin' ? '' : 'hidden'}"><i class="far fa-trash-alt mr-1"></i>Delete</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Wire actions
+            $$('.ver-preview', list).forEach(btn => btn.addEventListener('click', () => openSpecificVersion(btn.dataset.docId, parseInt(btn.dataset.ver))))
+            $$('.ver-delete', list).forEach(btn => btn.addEventListener('click', () => deleteVersion(btn.dataset.docId, parseInt(btn.dataset.ver))))
+
+            $('#versionsModal').classList.remove('hidden');
+            $('#versionsModal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeVersions() {
+            $('#versionsModal').classList.add('hidden');
+            $('#versionsModal').classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+        function openSpecificVersion(docId, ver) {
+            const doc = documents.find(d => d.id === docId);
+            if (!doc) return;
+            const v = doc.versions.find(x => x.version === ver);
+            if (!v) return;
+            // Temporarily show this version in preview
+            const tempDoc = { id: docId, versions: [v] };
+            documents.push(tempDoc); // hack to reuse openPreview
+            openPreview(tempDoc.id);
+            documents.pop();
+            closeVersions();
+        }
+
+        // Delete
+        function deleteDocumentSeries(docId) {
+            if (role !== 'admin') return;
+            if (!confirm('Delete this document series (all versions)?')) return;
+            const idx = documents.findIndex(d => d.id === docId);
+            if (idx > -1) {
+                const removed = documents.splice(idx, 1)[0];
+                addNotification(`${removed.type === 'agenda' ? 'Agenda' : removed.type === 'minutes' ? 'Minutes' : 'Attachment'} deleted`);
+                saveDocs();
+                applyFilters();
+            }
+        }
+        function deleteVersion(docId, ver) {
+            if (role !== 'admin') return;
+            const doc = documents.find(d => d.id === docId);
+            if (!doc) return;
+            if (!confirm(`Delete version v${ver}?`)) return;
+            const idx = doc.versions.findIndex(v => v.version === ver);
+            if (idx > -1) {
+                doc.versions.splice(idx, 1);
+                if (doc.versions.length === 0) {
+                    // remove series
+                    const sidx = documents.findIndex(d => d.id === docId);
+                    documents.splice(sidx, 1);
+                }
+                saveDocs();
+                closeVersions();
+                applyFilters();
+            }
+        }
+
+        // Expose key functions globally for inline handlers as a fallback
+        window.openUploadModal = openUploadModal;
+        window.closeUploadModal = closeUploadModal;
+        window.handleUpload = handleUpload;
+        window.openPreview = openPreview;
+        window.closePreview = closePreview;
+        window.openVersions = openVersions;
+        window.closeVersions = closeVersions;
+        window.deleteDocumentSeries = deleteDocumentSeries;
+        window.deleteVersion = deleteVersion;
+
+        // Events and init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadState();
+
+            // Wire role
+            $('#roleSelect').value = role;
+            $('#roleSelect').addEventListener('change', (e) => {
+                role = e.target.value;
+                saveRole();
+                applyRoleUI();
+            });
+
+            // Filters
+            $('#searchInput').addEventListener('input', applyFilters);
+            $('#typeFilter').addEventListener('change', applyFilters);
+            $('#uploaderFilter').addEventListener('input', applyFilters);
+            $('#dateFrom').addEventListener('change', applyFilters);
+            $('#dateTo').addEventListener('change', applyFilters);
+            $('#resetFilters').addEventListener('click', () => {
+                $('#searchInput').value = '';
+                $('#typeFilter').value = '';
+                $('#uploaderFilter').value = '';
+                $('#dateFrom').value = '';
+                $('#dateTo').value = '';
+                applyFilters();
+            });
+
+            // Upload
+            // Upload button (kept even with inline onclick)
+            $('#uploadBtn').addEventListener('click', openUploadModal);
+            $('#closeUploadModal').addEventListener('click', closeUploadModal);
+            $('#cancelUpload').addEventListener('click', closeUploadModal);
+            $('#docType').addEventListener('change', (e) => {
+                const val = e.target.value;
+                if (val === 'attachment') {
+                    $('#attachmentSubtypeRow').classList.remove('hidden');
+                } else {
+                    $('#attachmentSubtypeRow').classList.add('hidden');
+                }
+            });
+            $('#uploadSubmit').addEventListener('click', handleUpload);
+
+            // Preview modal close
+            $('#closePreviewModal').addEventListener('click', closePreview);
+            $('#closePreviewModalBottom').addEventListener('click', closePreview);
+
+            // Versions modal close
+            $('#closeVersionsModal').addEventListener('click', closeVersions);
+            $('#closeVersionsModalBottom').addEventListener('click', closeVersions);
+
+            // Notifications (guarded; UI removed on this page)
+            const markAllBtn = $('#markAllReadBtn');
+            if (markAllBtn) {
+                markAllBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    notifications.forEach(n => n.unread = false);
+                    saveNotifs();
+                    renderNotifications();
+                });
+            }
+
+            // Profile dropdown menu
+            const profileBtn = $('#profileBtn');
+            const profileMenu = $('#profileMenu');
+            const signOutBtn = $('#signOutBtn');
+            const profileLink = $('#profileLink');
+            function toggleProfileMenu(show) {
+                const isOpen = show !== undefined ? show : profileMenu.classList.contains('hidden');
+                if (isOpen) {
+                    profileMenu.classList.remove('hidden');
+                    profileBtn.setAttribute('aria-expanded', 'true');
+                    profileBtn.classList.add('bg-blue-200','ring-2','ring-blue-500');
+                } else {
+                    profileMenu.classList.add('hidden');
+                    profileBtn.setAttribute('aria-expanded', 'false');
+                    profileBtn.classList.remove('bg-blue-200','ring-2','ring-blue-500');
+                }
+            }
+            if (profileBtn && profileMenu) {
+                profileBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isHidden = profileMenu.classList.contains('hidden');
+                    toggleProfileMenu(isHidden);
+                });
+                document.addEventListener('click', (e) => {
+                    if (!profileMenu.classList.contains('hidden')) {
+                        const within = profileMenu.contains(e.target) || profileBtn.contains(e.target);
+                        if (!within) toggleProfileMenu(false);
+                    }
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') toggleProfileMenu(false);
+                });
+            }
+            if (profileLink) {
+                profileLink.addEventListener('click', () => toggleProfileMenu(false));
+            }
+            if (signOutBtn) {
+                signOutBtn.addEventListener('click', () => {
+                    try { localStorage.removeItem(STORE_KEYS.role); } catch(e){}
+                    try { localStorage.removeItem(STORE_KEYS.docs); } catch(e){}
+                    try { localStorage.removeItem(STORE_KEYS.notifs); } catch(e){}
+                    window.location.href = '../public/index.html';
+                });
+            }
+
+            // Initial render
+            renderNotifications();
+            applyFilters();
+            applyRoleUI();
+        });
+
+        // Sidebar notifications link
+        $('#sidebarNotifications')?.addEventListener('click', function(e) {
+            // default navigate to notifications.html
+        });
+    </script>
+</body>
+</html>

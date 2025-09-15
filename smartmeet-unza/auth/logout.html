@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logging Out - SmartMeet UNZA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/auth/logout.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #cfe9ff 0%, #93c5fd 30%, #60a5fa 55%, #3b82f6 75%, #1e40af 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        .logout-container {
+            text-align: center;
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            max-width: 28rem;
+            width: 100%;
+            margin: 1rem;
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+            color: #3b82f6;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="logout-container">
+        <div class="spinner">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Signing Out</h2>
+        <p class="text-gray-600 mb-6">Please wait while we securely sign you out...</p>
+        <p class="text-sm text-gray-500">If you're not redirected, <a href="/auth/login.html" class="text-blue-600 hover:underline">click here</a> to go to the login page.</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - SmartMeet UNZA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-blue-800 text-white p-4 flex flex-col h-full">
+            <!-- Logo and Title -->
+            <div class="flex flex-col items-center py-4 border-b border-blue-700 mb-6">
+                <div class="flex items-center justify-center space-x-2 mb-2">
+                    <span class="text-2xl font-bold">SmartMeet</span>
+                </div>
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md mb-2">
+                    <span class="text-blue-800 font-bold text-xl">UNZA</span>
+                </div>
+                <p class="text-sm text-blue-200">Administration Panel</p>
+            </div>
+            
+            <!-- User Info -->
+            <div class="flex items-center mb-8 p-2 bg-blue-700 rounded">
+                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <p class="font-medium">Admin User</p>
+                    <p class="text-xs text-blue-200">Administrator</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="space-y-2">
+                <a href="index.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="meetings.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-calendar-alt w-5 mr-3"></i>
+                    <span>Meetings</span>
+                </a>
+                <a href="room-booking.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-door-open w-5 mr-3"></i>
+                    <span>Room Booking</span>
+                </a>
+                <a href="users.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-users-cog w-5 mr-3"></i>
+                    <span>Users & Roles</span>
+                </a>
+                <a href="documents.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-file-alt w-5 mr-3"></i>
+                    <span>Documents</span>
+                </a>
+                <a href="reports.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-chart-bar w-5 mr-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="notifications.html" class="flex items-center p-2 rounded bg-blue-900">
+                    <i class="fas fa-bell w-5 mr-3"></i>
+                    <span>Notifications</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar Sign out (bottom) -->
+            <div class="mt-auto pt-4 border-t border-blue-700">
+                <button id="signOutBtn" class="w-full flex items-center p-2 rounded hover:bg-blue-700 text-red-100">
+                    <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                    <span>Sign out</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white shadow-sm p-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-semibold text-gray-800">Notifications</h2>
+                    <div></div>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-4 md:p-6">
+                <div class="max-w-4xl mx-auto">
+                    <div class="bg-white rounded-lg border border-gray-100 p-8 text-center text-gray-500">
+                        No notifications available
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <div id="notification-settings" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg w-full max-w-2xl">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-lg font-medium">Notification Settings</h3>
+                <button onclick="closeSettings()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="font-medium mb-3">Email Notifications</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium">Meeting Invitations</p>
+                                    <p class="text-xs text-gray-500">Receive email when invited to a meeting</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium">Meeting Reminders</p>
+                                    <p class="text-xs text-gray-500">Receive email reminders before meetings</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium">Booking Confirmations</p>
+                                    <p class="text-xs text-gray-500">Receive email when bookings are confirmed</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t pt-4">
+                        <h4 class="font-medium mb-3">In-App Notifications</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium">Meeting Reminders</p>
+                                    <p class="text-xs text-gray-500">30 minutes before virtual meetings</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium">Physical Meeting Reminders</p>
+                                    <p class="text-xs text-gray-500">1 hour before physical meetings</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium">System Updates</p>
+                                    <p class="text-xs text-gray-500">Receive important system notifications</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t flex justify-end space-x-2">
+                <button onclick="closeSettings()" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common-ui.js"></script>
+</body>
+</html>

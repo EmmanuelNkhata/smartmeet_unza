@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Meeting - SmartMeet UNZA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/public/css/styles.css">
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-blue-800 text-white p-4 flex flex-col h-full">
+            <!-- Logo and Title -->
+            <div class="flex flex-col items-center py-4 border-b border-blue-700 mb-6">
+                <div class="flex items-center justify-center space-x-2 mb-2">
+                    <span class="text-2xl font-bold">SmartMeet</span>
+                </div>
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md mb-2">
+                    <span class="text-blue-800 font-bold text-xl">UNZA</span>
+                </div>
+                <p class="text-sm text-blue-200">Administration Panel</p>
+            </div>
+            
+            <!-- User Info -->
+            <div class="flex items-center mb-8 p-2 bg-blue-700 rounded">
+                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <p class="font-medium">Admin User</p>
+                    <p class="text-xs text-blue-200">Administrator</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="space-y-2">
+                <a href="index.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="meetings.html" class="flex items-center p-2 rounded hover:bg-blue-700 bg-blue-900">
+                    <i class="fas fa-calendar-alt w-5 mr-3"></i>
+                    <span>Meetings</span>
+                </a>
+                <a href="room-booking.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-door-open w-5 mr-3"></i>
+                    <span>Room Booking</span>
+                </a>
+                <a href="users.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-users-cog w-5 mr-3"></i>
+                    <span>Users & Roles</span>
+                </a>
+                <a href="documents.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-file-alt w-5 mr-3"></i>
+                    <span>Documents</span>
+                </a>
+                <a href="reports.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-chart-bar w-5 mr-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="notifications.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-bell w-5 mr-3"></i>
+                    <span>Notifications</span>
+                </a>
+                <a href="settings.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-cog w-5 mr-3"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="../index.html" class="flex items-center p-2 mt-4 text-red-200 hover:bg-red-700 rounded">
+                    <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm p-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-semibold text-gray-800">Create New Meeting</h2>
+                    <div class="flex items-center space-x-4">
+                        <button class="text-gray-600 hover:text-gray-900 relative">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+                        </button>
+                        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                            <i class="fas fa-user text-blue-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Form Header -->
+                    <div class="md:flex md:items-center md:justify-between mb-6">
+                        <div class="flex-1 min-w-0">
+                            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Meeting Details</h2>
+                            <p class="mt-1 text-sm text-gray-500">Fill in the details below to schedule a new meeting.</p>
+                        </div>
+                        <div class="mt-4 flex md:mt-0 md:ml-4 space-x-2">
+                            <a href="meetings.html" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <i class="fas fa-arrow-left mr-2"></i> Back to Meetings
+                            </a>
+                            <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <i class="fas fa-calendar-check mr-2"></i> Schedule Meeting
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Meeting Form -->
+                    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="space-y-6">
+                                <!-- Basic Information -->
+                                <div>
+                                    <h3 class="text-lg font-medium text-gray-900 mb-4">Basic Information</h3>
+                                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                                        <div class="sm:col-span-4">
+                                            <label for="meeting-title" class="block text-sm font-medium text-gray-700">Meeting Title</label>
+                                            <input type="text" name="meeting-title" id="meeting-title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Department Weekly Sync">
+                                        </div>
+
+                                        <div class="sm:col-span-6">
+                                            <label for="meeting-description" class="block text-sm font-medium text-gray-700">Description</label>
+                                            <div class="mt-1">
+                                                <textarea id="meeting-description" name="meeting-description" rows="3" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border border-gray-300 rounded-md" placeholder="Brief description of the meeting agenda"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="meeting-date" class="block text-sm font-medium text-gray-700">Date</label>
+                                            <input type="date" name="meeting-date" id="meeting-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="meeting-time" class="block text-sm font-medium text-gray-700">Start Time</label>
+                                            <input type="time" name="meeting-time" id="meeting-time" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="meeting-duration" class="block text-sm font-medium text-gray-700">Duration</label>
+                                            <select id="meeting-duration" name="meeting-duration" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                                <option>30 minutes</option>
+                                                <option selected>1 hour</option>
+                                                <option>1.5 hours</option>
+                                                <option>2 hours</option>
+                                                <option>Custom</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label for="meeting-location" class="block text-sm font-medium text-gray-700">Location</label>
+                                            <select id="meeting-location" name="meeting-location" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                                <option>Select a location</option>
+                                                <option>Computer Lab 1 (CL1)</option>
+                                                <option>Computer Lab 2 (CL2)</option>
+                                                <option>Computer Lab 3 (CL3)</option>
+                                                <option>Online</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Participants -->
+                                <div class="pt-6 border-t border-gray-200">
+                                    <h3 class="text-lg font-medium text-gray-900 mb-4">Participants</h3>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label for="participant-search" class="block text-sm font-medium text-gray-700">Add Participants</label>
+                                            <div class="mt-1 flex rounded-md shadow-sm">
+                                                <div class="relative flex-grow focus-within:z-10">
+                                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                        <i class="fas fa-search text-gray-400"></i>
+                                                    </div>
+                                                    <input type="text" name="participant-search" id="participant-search" class="focus:ring-blue-500 focus:border-blue-500 block w-full rounded-none rounded-l-md pl-10 sm:text-sm border-gray-300" placeholder="Search by name or email">
+                                                </div>
+                                                <button type="button" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                                                    <i class="fas fa-plus mr-2"></i> Add
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Selected Participants -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Selected Participants</label>
+                                            <div class="bg-gray-50 rounded-md p-4 border border-gray-200">
+                                                <p class="text-sm text-gray-500">No participants added yet. Search and add participants above.</p>
+                                                <!-- Participant list would be dynamically added here -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Agenda Items -->
+                                <div class="pt-6 border-t border-gray-200">
+                                    <h3 class="text-lg font-medium text-gray-900 mb-4">Agenda Items</h3>
+                                    <div id="agenda-items" class="space-y-4">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="flex-1">
+                                                <input type="text" name="agenda-item-1" class="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Agenda item title">
+                                                <textarea name="agenda-description-1" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Description (optional)"></textarea>
+                                            </div>
+                                            <button type="button" class="text-red-500 hover:text-red-700 mt-2">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="mt-3 inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        <i class="fas fa-plus mr-1.5 h-4 w-4 text-gray-500"></i>
+                                        Add Agenda Item
+                                    </button>
+                                </div>
+
+                                <!-- Additional Options -->
+                                <div class="pt-6 border-t border-gray-200">
+                                    <h3 class="text-lg font-medium text-gray-900 mb-4">Additional Options</h3>
+                                    <div class="space-y-4">
+                                        <div class="flex items-start">
+                                            <div class="flex items-center h-5">
+                                                <input id="send-notification" name="send-notification" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" checked>
+                                            </div>
+                                            <div class="ml-3 text-sm">
+                                                <label for="send-notification" class="font-medium text-gray-700">Send email notifications to participants</label>
+                                                <p class="text-gray-500">Participants will receive an email with meeting details and calendar invite.</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Attendance options - only shown for in-person and hybrid meetings -->
+                                        <div id="attendance-options" class="hidden">
+                                            <div class="flex items-start">
+                                                <div class="flex items-center h-5">
+                                                    <input id="require-rsvp" name="require-rsvp" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                                </div>
+                                                <div class="ml-3 text-sm">
+                                                    <label for="require-rsvp" class="font-medium text-gray-700">Require RSVP</label>
+                                                    <p class="text-gray-500">Participants must confirm their attendance.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Meeting type change handler -->
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const meetingTypeSelect = document.querySelector('select[name="meeting-type"]');
+                                        const attendanceOptions = document.getElementById('attendance-options');
+                                        
+                                        function updateAttendanceOptions() {
+                                            const selectedType = meetingTypeSelect.value;
+                                            if (selectedType === 'virtual') {
+                                                attendanceOptions.classList.add('hidden');
+                                                document.getElementById('require-rsvp').checked = false;
+                                            } else {
+                                                attendanceOptions.classList.remove('hidden');
+                                            }
+                                        }
+                                        
+                                        if (meetingTypeSelect) {
+                                            meetingTypeSelect.addEventListener('change', updateAttendanceOptions);
+                                            // Initialize on page load
+                                            updateAttendanceOptions();
+                                        }
+                                    });
+                                </script>
+
+                                <!-- Form Actions -->
+                                <div class="pt-6 border-t border-gray-200 flex justify-end space-x-3">
+                                    <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Save as Draft
+                                    </button>
+                                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Schedule Meeting
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - SmartMeet UNZA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <div id="sidebar-container" class="h-full"></div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <div id="header-container"></div>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-4 md:p-6">
+                <!-- Page Title (header component provides title area) -->
+                <div class="hidden">
+                    <h2 class="text-xl font-semibold text-gray-800" id="page-title">Notifications</h2>
+                </div>
+
+                <!-- Notification List -->
+                <div class="max-w-4xl mx-auto">
+                    <!-- Today's Notifications -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-medium text-gray-500 mb-3">TODAY</h3>
+                        <div class="space-y-3">
+                            <!-- Unread Notification 1 -->
+                            <div class="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500 flex items-start">
+                                <div class="flex-shrink-0 mt-1">
+                                    <div class="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900">Meeting Reminder</p>
+                                        <span class="text-xs text-gray-500">10 min ago</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-600">Project Kickoff meeting starts in 1 hour</p>
+                                    <div class="mt-2 flex items-center text-xs text-gray-500">
+                                        <span class="flex items-center">
+                                            <i class="far fa-clock mr-1"></i> Today, 14:00 - 15:30
+                                        </span>
+                                        <span class="mx-2">•</span>
+                                        <span class="flex items-center">
+                                            <i class="fas fa-map-marker-alt mr-1"></i> Conference Room A
+                                        </span>
+                                    </div>
+                                    <div class="mt-2 flex space-x-2">
+                                        <button class="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded hover:bg-blue-100">
+                                            View Details
+                                        </button>
+                                        <button class="px-3 py-1 bg-gray-50 text-gray-700 text-xs font-medium rounded hover:bg-gray-100">
+                                            Dismiss
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Unread Notification 2 -->
+                            <div class="bg-white p-4 rounded-lg shadow border-l-4 border-green-500 flex items-start">
+                                <div class="flex-shrink-0 mt-1">
+                                    <div class="h-10 w-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                                        <i class="fas fa-file-upload"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900">New Document Added</p>
+                                        <span class="text-xs text-gray-500">30 min ago</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-600">Meeting minutes for Project Review has been uploaded</p>
+                                    <div class="mt-2">
+                                        <div class="flex items-center text-xs text-gray-500">
+                                            <i class="far fa-file-word text-blue-500 mr-1"></i>
+                                            <span>Project_Review_Minutes.docx</span>
+                                            <span class="mx-2">•</span>
+                                            <span>245 KB</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <button class="px-3 py-1 bg-green-50 text-green-700 text-xs font-medium rounded hover:bg-green-100">
+                                            Download
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Yesterday's Notifications -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-medium text-gray-500 mb-3">YESTERDAY</h3>
+                        <div class="space-y-3">
+                            <!-- Read Notification 1 -->
+                            <div class="bg-white p-4 rounded-lg shadow flex items-start opacity-75">
+                                <div class="flex-shrink-0 mt-1">
+                                    <div class="h-10 w-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900">Venue Changed</p>
+                                        <span class="text-xs text-gray-400">Yesterday, 15:30</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-600">Team Meeting has been moved to Conference Room B</p>
+                                    <div class="mt-2">
+                                        <button class="px-3 py-1 bg-gray-50 text-gray-700 text-xs font-medium rounded hover:bg-gray-100">
+                                            View Details
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Older Notifications -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-medium text-gray-500 mb-3">OLDER</h3>
+                        <div class="space-y-3">
+                            <!-- Older Notification 1 -->
+                            <div class="bg-white p-4 rounded-lg shadow flex items-start opacity-50">
+                                <div class="flex-shrink-0 mt-1">
+                                    <div class="h-10 w-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900">New Meeting Scheduled</p>
+                                        <span class="text-xs text-gray-400">2 days ago</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-600">Sprint Planning meeting has been scheduled</p>
+                                    <div class="mt-2">
+                                        <button class="px-3 py-1 bg-gray-50 text-gray-700 text-xs font-medium rounded hover:bg-gray-100">
+                                            View Details
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+</body>
+</html>

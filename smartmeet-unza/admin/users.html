@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Management - SmartMeet UNZA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body class="bg-gray-100">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="w-64 bg-blue-800 text-white p-4 flex flex-col h-full">
+      <div class="flex flex-col items-center py-4 border-b border-blue-700 mb-6">
+        <div class="flex items-center justify-center space-x-2 mb-2">
+          <span class="text-2xl font-bold">SmartMeet</span>
+        </div>
+        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md mb-2">
+          <span class="text-blue-800 font-bold text-xl">UNZA</span>
+        </div>
+        <p class="text-sm text-blue-200">Administration Panel</p>
+      </div>
+
+      <div class="flex items-center mb-8 p-2 bg-blue-700 rounded">
+        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+          <i class="fas fa-user"></i>
+        </div>
+        <div>
+          <p class="font-medium">Admin</p>
+          <p class="text-xs text-blue-200">User Management</p>
+        </div>
+      </div>
+
+      <nav class="space-y-2">
+        <a href="index.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+          <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="meetings.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+          <i class="fas fa-calendar-alt w-5 mr-3"></i>
+          <span>Meetings</span>
+        </a>
+        <a href="room-booking.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+          <i class="fas fa-door-open w-5 mr-3"></i>
+          <span>Room Booking</span>
+        </a>
+        <a href="users.html" class="flex items-center p-2 rounded bg-blue-900">
+          <i class="fas fa-users w-5 mr-3"></i>
+          <span>Users</span>
+        </a>
+        <a href="documents.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+          <i class="fas fa-file-alt w-5 mr-3"></i>
+          <span>Documents</span>
+        </a>
+        <a href="reports.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+          <i class="fas fa-chart-bar w-5 mr-3"></i>
+          <span>Reports</span>
+        </a>
+        <a href="notifications.html" class="flex items-center p-2 rounded hover:bg-blue-700">
+          <i class="fas fa-bell w-5 mr-3"></i>
+          <span>Notifications</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar Sign out (bottom) -->
+      <div class="mt-auto pt-4 border-t border-blue-700">
+        <button id="signOutBtn" class="w-full flex items-center p-2 rounded hover:bg-blue-700 text-red-100">
+          <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+          <span>Sign out</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header class="bg-white shadow-sm p-4">
+        <div class="flex justify-between items-center">
+          <h1 class="text-xl font-semibold text-gray-800">User Management</h1>
+          <div class="flex items-center space-x-4">
+            <button id="btnOpenCreate" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center">
+              <i class="fas fa-user-plus mr-2"></i>
+              <span>Create User</span>
+            </button>
+
+            
+                      </div>
+        </div>
+      </header>
+
+      <main class="flex-1 overflow-y-auto p-6 space-y-6">
+        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-search text-gray-400"></i>
+              </div>
+              <input id="searchInput" type="text" placeholder="Search by name or email" class="pl-10 pr-3 py-2 border rounded-md w-full" />
+            </div>
+            <div>
+              <select id="roleFilter" class="p-2 border rounded-md w-full text-sm">
+                <option value="">All Roles</option>
+                <option value="admin">Admin</option>
+                <option value="studentAdmin">Student Admin</option>
+                <option value="user">User</option>
+              </select>
+            </div>
+            <div>
+              <select id="statusFilter" class="p-2 border rounded-md w-full text-sm">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="flex justify-end">
+              <button id="btnReset" class="px-3 py-2 border rounded-md text-sm hover:bg-gray-50">
+                <i class="fas fa-redo mr-1"></i> Reset
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTbody" class="bg-white divide-y divide-gray-200"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Create/Edit Modal -->
+  <div id="userModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg w-full max-w-xl">
+      <div class="p-4 border-b flex justify-between items-center">
+        <h3 id="modalTitle" class="text-lg font-medium">Create User</h3>
+        <button id="btnCloseModal" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <input id="inpName" type="text" class="w-full p-2 border rounded-md" placeholder="e.g. Jane Doe" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email (CS Dept)</label>
+            <input id="inpEmail" type="email" class="w-full p-2 border rounded-md" placeholder="name@cs.unza.zm" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <select id="inpRole" class="w-full p-2 border rounded-md">
+              <option value="admin">Admin</option>
+              <option value="studentAdmin">Student Admin</option>
+              <option value="user">User</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone (optional)</label>
+            <input id="inpPhone" type="tel" class="w-full p-2 border rounded-md" placeholder="0977xxxxxx" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password <span id="pwdReqStar" class="text-red-500">*</span></label>
+            <input id="inpPassword" type="password" class="w-full p-2 border rounded-md" placeholder="Set initial password" />
+            <p class="text-xs text-gray-500 mt-1">Optional. Default password is 123456789 (user can change later).</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password <span id="pwdReqStar2" class="text-red-500">*</span></label>
+            <input id="inpPassword2" type="password" class="w-full p-2 border rounded-md" placeholder="Re-enter password" />
+          </div>
+        </div>
+        <p id="formError" class="text-sm text-red-600 hidden"></p>
+      </div>
+      <div class="p-4 border-t flex justify-end space-x-2">
+        <button id="btnCancel" class="px-4 py-2 border rounded-md hover:bg-gray-50">Cancel</button>
+        <button id="btnSave" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // Storage key
+  const USERS_KEY = 'sm_users_v1';
+
+  // State
+  let users = [];
+  let editId = null;
+
+  // Shortcuts
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+
+  // Load/Save
+  function loadUsers(){
+    try { users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); }
+    catch(e){ users = []; }
+  }
+  function saveUsers(){ localStorage.setItem(USERS_KEY, JSON.stringify(users)); }
+  function getCurrentEmail(){ try { return (localStorage.getItem('userEmail') || sessionStorage.getItem('userEmail') || '').toLowerCase(); } catch(e){ return ''; } }
+  function getCurrentName(){ try { return localStorage.getItem('userName') || sessionStorage.getItem('userName') || ''; } catch(e){ return ''; } }
+  function purgeToMyUsers(){
+    const me = getCurrentEmail();
+    if (!me) return;
+    const before = users.length;
+    users = users.filter(u => ((u.email||'').toLowerCase() === me) || ((u.createdByEmail||'').toLowerCase() === me));
+    if (users.length !== before) saveUsers();
+  }
+
+  // Hash password with SHA-256 (hex) using Web Crypto API
+  async function sha256Hex(message){
+    const enc = new TextEncoder();
+    const buf = await crypto.subtle.digest('SHA-256', enc.encode(message));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // Seed (only first time)
+  async function seed(){
+    // Demo seeding removed
+  }
+
+  // Render
+  function render(){
+    const term = $('#searchInput').value.trim().toLowerCase();
+    const rf = $('#roleFilter').value;
+    const sf = $('#statusFilter').value;
+    const tbody = $('#usersTbody');
+
+    let list = users.slice();
+    if (term) list = list.filter(u => (u.name + ' ' + u.email).toLowerCase().includes(term));
+    if (rf) list = list.filter(u => u.role === rf);
+    if (sf) list = list.filter(u => u.active === (sf === 'active'));
+
+    if (list.length === 0){
+      tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-gray-500">No users found</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = list.map(u => `
+      <tr class="hover:bg-gray-50">
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="font-medium text-gray-900">${u.name}</div>
+          <div class="text-xs text-gray-400">${u.id}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${u.email}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${labelRole(u.role)}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${u.phone || '-'}</td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${u.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700'}">${u.active ? 'Active' : 'Inactive'}</span>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+          <button class="text-blue-600 hover:text-blue-900" data-action="edit" data-id="${u.id}"><i class="fas fa-edit mr-1"></i>Edit</button>
+          <button class="${u.active ? 'text-red-600 hover:text-red-800' : 'text-green-600 hover:text-green-800'}" data-action="toggle" data-id="${u.id}"><i class="fas ${u.active ? 'fa-user-slash' : 'fa-user-check'} mr-1"></i>${u.active ? 'Deactivate' : 'Activate'}</button>
+          <button class="text-red-600 hover:text-red-800" data-action="delete" data-id="${u.id}"><i class="far fa-trash-alt mr-1"></i>Delete</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function labelRole(r){
+    if (r==='admin') return 'Admin';
+    if (r==='studentAdmin') return 'Student Admin';
+    return 'User';
+  }
+
+  // Modal
+  function openModal(mode, id){
+    $('#formError').classList.add('hidden');
+    if (mode === 'create'){
+      $('#modalTitle').textContent = 'Create User';
+      editId = null;
+      $('#inpName').value = '';
+      $('#inpEmail').value = '';
+      $('#inpRole').value = 'user';
+      $('#inpPhone').value = '';
+      $('#inpPassword') && ($('#inpPassword').value = '', $('#inpPassword').placeholder = 'Optional: set initial password');
+      $('#inpPassword2') && ($('#inpPassword2').value = '', $('#inpPassword2').placeholder = 'Optional: re-enter password');
+      $('#pwdReqStar') && ($('#pwdReqStar').style.display = 'none');
+      $('#pwdReqStar2') && ($('#pwdReqStar2').style.display = 'none');
+    } else {
+      $('#modalTitle').textContent = 'Edit User';
+      editId = id;
+      const u = users.find(x => x.id === id);
+      if (!u) return;
+      $('#inpName').value = u.name;
+      $('#inpEmail').value = u.email;
+      $('#inpRole').value = u.role;
+      $('#inpPhone').value = u.phone || '';
+      $('#inpPassword') && ($('#inpPassword').value = '', $('#inpPassword').placeholder = 'Leave blank to keep current');
+      $('#inpPassword2') && ($('#inpPassword2').value = '', $('#inpPassword2').placeholder = 'Leave blank to keep current');
+      $('#pwdReqStar') && ($('#pwdReqStar').style.display = 'none');
+      $('#pwdReqStar2') && ($('#pwdReqStar2').style.display = 'none');
+    }
+    const m = $('#userModal');
+    m.classList.remove('hidden');
+    m.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){
+    const m = $('#userModal');
+    m.classList.add('hidden');
+    m.classList.remove('flex');
+    document.body.style.overflow = 'auto';
+  }
+
+  // Validation
+  function validate(data){
+    if (!data.name || data.name.trim().length < 2) return 'Full name is required';
+    if (!data.email) return 'Email is required';
+    if (!/@cs\.unza\.zm$/i.test(data.email)) return 'Email must end with @cs.unza.zm';
+    if (!['admin','studentAdmin','user'].includes(data.role)) return 'Invalid role';
+    return '';
+  }
+
+  // CRUD
+  async function createUser(){
+    const name = $('#inpName').value.trim();
+    const email = $('#inpEmail').value.trim().toLowerCase();
+    const role = $('#inpRole').value;
+    const phone = $('#inpPhone').value.trim();
+    const pwd = $('#inpPassword').value;
+    const pwd2 = $('#inpPassword2').value;
+
+    const base = { id: crypto.randomUUID(), name, email, role, phone, active: true };
+    const err = validate(base);
+    if (err) return showFormError(err);
+    if (users.some(u => u.email === email)) return showFormError('A user with this email already exists');
+
+    let passwordHash;
+    if (pwd || pwd2){
+      if (pwd.length < 8) return showFormError('Password must be at least 8 characters');
+      if (pwd !== pwd2) return showFormError('Passwords do not match');
+      passwordHash = await sha256Hex(pwd);
+    } else {
+      passwordHash = await sha256Hex('123456789');
+    }
+    const now = new Date().toISOString();
+    const meEmail = getCurrentEmail();
+    const meName = getCurrentName();
+    const newUser = { ...base, passwordHash, createdAt: now, updatedAt: now, createdByEmail: meEmail || undefined, createdByName: meName || undefined };
+    users.push(newUser);
+    saveUsers();
+    closeModal();
+    render();
+  }
+
+  async function updateUser(){
+    const idx = users.findIndex(u => u.id === editId);
+    if (idx === -1) return;
+    const name = $('#inpName').value.trim();
+    const email = $('#inpEmail').value.trim().toLowerCase();
+    const role = $('#inpRole').value;
+    const phone = $('#inpPhone').value.trim();
+    const pwd = $('#inpPassword').value;
+    const pwd2 = $('#inpPassword2').value;
+
+    const updated = { ...users[idx], name, email, role, phone };
+    const err = validate(updated);
+    if (err) return showFormError(err);
+    const emailTaken = users.some((u,i) => i!==idx && u.email === email);
+    if (emailTaken) return showFormError('Another user already uses this email');
+    if (pwd || pwd2){
+      if (pwd.length < 8) return showFormError('Password must be at least 8 characters');
+      if (pwd !== pwd2) return showFormError('Passwords do not match');
+      updated.passwordHash = await sha256Hex(pwd);
+    }
+    updated.updatedAt = new Date().toISOString();
+    users[idx] = updated;
+    saveUsers();
+    closeModal();
+    render();
+  }
+
+  function toggleActive(id){
+    const u = users.find(x => x.id === id);
+    if (!u) return;
+    const next = !u.active;
+    if (!confirm(`${next ? 'Activate' : 'Deactivate'} account for ${u.name}?`)) return;
+    u.active = next;
+    saveUsers();
+    render();
+  }
+
+  function deleteUser(id){
+    const idx = users.findIndex(x => x.id === id);
+    if (idx === -1) return;
+    if (!confirm(`Delete account for ${users[idx].name}? This action cannot be undone.`)) return;
+    users.splice(idx, 1);
+    saveUsers();
+    render();
+  }
+
+  function showFormError(msg){
+    const el = $('#formError');
+    el.textContent = msg;
+    el.classList.remove('hidden');
+  }
+
+  // Notifications (shared)
+  const NOTIFS_KEY = 'sm_notifs_v1';
+  function loadNotifs(){ try { return JSON.parse(localStorage.getItem(NOTIFS_KEY) || '[]'); } catch(e){ return []; } }
+  function saveNotifs(list){ localStorage.setItem(NOTIFS_KEY, JSON.stringify(list)); }
+  function renderNotifUI(){
+    const itemsEl = document.getElementById('notifItems');
+    const badge = document.getElementById('notifCountBadge');
+    const list = loadNotifs();
+    const unread = list.filter(n => n.unread).length;
+    if (badge){
+      if (unread > 0){ badge.textContent = String(unread); badge.classList.remove('hidden'); }
+      else { badge.classList.add('hidden'); }
+    }
+    if (itemsEl){
+      if (list.length === 0){
+        itemsEl.innerHTML = '<div class="px-4 py-6 text-center text-sm text-gray-500">No notifications</div>';
+      } else {
+        itemsEl.innerHTML = list.map(n => `
+          <div class="px-4 py-3 ${n.unread ? 'bg-blue-50' : ''} border-b border-gray-100">
+            <div class="flex items-start">
+              <div class="flex-shrink-0 pt-1"><div class="w-2 h-2 ${n.unread ? 'bg-blue-500' : 'bg-transparent'} rounded-full"></div></div>
+              <div class="ml-3">
+                <p class="text-sm ${n.unread ? 'font-medium text-gray-900' : 'text-gray-800'}">${n.text||'Notification'}</p>
+                <p class="text-xs text-gray-400 mt-1">${n.timestamp ? new Date(n.timestamp).toLocaleString() : ''}</p>
+              </div>
+            </div>
+          </div>`).join('');
+      }
+    }
+  }
+  function markAllRead(){ const list = loadNotifs(); list.forEach(n => n.unread = false); saveNotifs(list); renderNotifUI(); }
+
+  // Profile dropdown helpers
+  function wireProfileDropdown(){
+    const profileBtn = document.getElementById('profileBtn');
+    const profileMenu = document.getElementById('profileMenu');
+    if (!profileBtn || !profileMenu) return;
+    function toggle(show){
+      const s = show !== undefined ? show : profileMenu.classList.contains('hidden');
+      if (s){ profileMenu.classList.remove('hidden'); profileBtn.setAttribute('aria-expanded','true'); }
+      else { profileMenu.classList.add('hidden'); profileBtn.setAttribute('aria-expanded','false'); }
+    }
+    profileBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggle(); });
+    document.addEventListener('click', (e)=>{ if (!profileMenu.classList.contains('hidden')){ const within = profileMenu.contains(e.target) || profileBtn.contains(e.target); if (!within) toggle(false); } });
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') toggle(false); });
+  }
+
+  // Event wiring
+  document.addEventListener('DOMContentLoaded', async function(){
+    loadUsers();
+    purgeToMyUsers();
+    render();
+
+    // Notifications/profile handled by common-ui.js
+
+    // Filters
+    $('#searchInput').addEventListener('input', render);
+    $('#roleFilter').addEventListener('change', render);
+    $('#statusFilter').addEventListener('change', render);
+    $('#btnReset').addEventListener('click', function(){
+      $('#searchInput').value = '';
+      $('#roleFilter').value = '';
+      $('#statusFilter').value = '';
+      render();
+    });
+
+    // Create
+    $('#btnOpenCreate').addEventListener('click', () => openModal('create'));
+
+    // Modal controls
+    $('#btnCloseModal').addEventListener('click', closeModal);
+    $('#btnCancel').addEventListener('click', closeModal);
+    $('#btnSave').addEventListener('click', async function(){
+      if (editId) await updateUser(); else await createUser();
+    });
+
+    // Table actions via delegation
+    $('#usersTbody').addEventListener('click', function(e){
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const action = btn.dataset.action;
+      if (action === 'edit') openModal('edit', id);
+      if (action === 'toggle') toggleActive(id);
+      if (action === 'delete') deleteUser(id);
+    });
+  });
+  </script>
+  <script src="js/common-ui.js"></script>
+</body>
+</html>
