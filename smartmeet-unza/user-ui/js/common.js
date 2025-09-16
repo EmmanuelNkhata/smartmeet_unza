@@ -224,10 +224,38 @@ function initNotifications() {
 }
 
 // Toggle profile dropdown
+// Common logout function
+function handleLogout() {
+    // Clear all auth data from localStorage and sessionStorage
+    const authItems = [
+        'authToken', 'user', 'currentUser', 'isLoggedIn', 'userRole', 
+        'userEmail', 'userName', 'isFirstLogin', 'google_token',
+        'google_auth_state', 'session_token', 'refresh_token', 'access_token',
+        'smartmeet_unza_user'
+    ];
+    
+    authItems.forEach(item => {
+        localStorage.removeItem(item);
+        sessionStorage.removeItem(item);
+    });
+    
+    // Clear any cookies
+    document.cookie.split(';').forEach(cookie => {
+        const [name] = cookie.trim().split('=');
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+    });
+    
+    // Redirect to login page with a timestamp to prevent caching
+    const loginUrl = '/auth/login.html?logout=' + new Date().getTime();
+    window.location.href = loginUrl;
+}
+
 function setupProfileDropdown() {
     const profileBtn = document.getElementById('profileBtn');
     const profileMenu = document.getElementById('profileMenu');
     const notificationsMenu = document.getElementById('notificationsMenu');
+    const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
 
     function setExpanded(expanded) {
         if (profileBtn) profileBtn.setAttribute('aria-expanded', String(expanded));
@@ -276,6 +304,25 @@ function setupProfileDropdown() {
                 toggleProfileMenu(false);
             }
         });
+        
+        // Handle header logout button click
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleLogout();
+            });
+        }
+        
+        // Handle sidebar logout button click
+        if (sidebarLogoutBtn) {
+            sidebarLogoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleLogout();
+            });
+        }
     }
 }
 
