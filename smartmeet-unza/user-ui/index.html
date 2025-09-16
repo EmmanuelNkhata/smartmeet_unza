@@ -4,20 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartMeet UNZA - User Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+    <link rel="alternate icon" type="image/png" sizes="256x256" href="../assets/images/favicon-256.png">
+    <meta name="theme-color" content="#1e40af">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <style>
+        <style>
         .status-pending { color: #f59e0b; }
         .status-approved { color: #10b981; }
         .status-rejected { color: #ef4444; }
         .status-completed { color: #3b82f6; }
         .venue-booked { opacity: 0.6; pointer-events: none; }
+    .user-sidebar-bg { background-color: #f3f4f6; }
+    @media (min-width: 768px) {
+      .user-sidebar-bg { background-image: linear-gradient(to right, #1e40af 0, #1e40af 16rem, #f3f4f6 16rem, #f3f4f6 100%); }
+    }
+    /* Smooth page fade */
+      body.page-fade{opacity:0}
+      body.page-fade.page-fade-in{opacity:1;transition:opacity .18s ease}
+      body.page-fade.is-leaving{opacity:0}
+      /* Speed up rendering for large sections */
+      .cv{ content-visibility:auto; contain-intrinsic-size: 1px 500px; }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div class="flex min-h-screen">
+<body class="bg-gray-100 user-sidebar-bg">
+    <div class="flex min-h-screen items-stretch">
         <!-- Sidebar -->
         <div id="sidebar-container" class="h-full"></div>
 
@@ -31,9 +44,17 @@
                 <!-- Quick Actions -->
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-semibold text-gray-800">Dashboard</h2>
-                    <button id="newMeetingBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
-                        <i class="fas fa-plus mr-2"></i> New Meeting Request
-                    </button>
+                </div>
+
+                <!-- Title Picture -->
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow p-5 mb-6 flex items-center gap-4 text-white">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md">
+                        <span class="text-blue-800 font-bold text-xl">UNZA</span>
+                    </div>
+                    <div>
+                        <p class="text-sm opacity-90">Welcome to</p>
+                        <p class="text-xl font-semibold">SmartMeet User Dashboard</p>
+                    </div>
                 </div>
 
                 <!-- Stats Cards -->
@@ -104,7 +125,7 @@
                 </div>
 
                 <!-- Upcoming Meetings Section -->
-                <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+                <div class="bg-white rounded-lg shadow overflow-hidden mb-8 cv">
                     <div class="p-6 border-b border-gray-200">
                         <div class="flex justify-between items-center">
                             <h3 class="text-lg font-semibold">Upcoming Meetings</h3>
@@ -115,50 +136,10 @@
                 </div>
 
                 <!-- Recent Activity -->
-                <!-- My Meetings Section -->
-                <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
-                    <div class="p-6 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold flex justify-between items-center">
-                            <span>My Meeting Requests</span>
-                            <button id="refreshMeetings" class="text-blue-600 hover:text-blue-800 text-sm">
-                                <i class="fas fa-sync-alt mr-1"></i> Refresh
-                            </button>
-                        </h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Venue</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="meetingsList" class="bg-white divide-y divide-gray-200">
-                                <!-- Meetings will be loaded here -->
-                                <tr>
-                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">Loading meetings...</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Available Venues Section -->
-                <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
-                    <div class="p-6 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold">Available Venues</h3>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6" id="venuesList">
-                        <!-- Venues will be loaded here -->
-                        <div class="text-center text-gray-500">Loading venues...</div>
-                    </div>
-                </div>
-
+                
+                
                 <!-- Recent Documents -->
-                <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="bg-white rounded-lg shadow overflow-hidden cv">
                     <div class="p-6 border-b border-gray-200">
                         <h3 class="text-lg font-semibold">Recent Documents</h3>
                         </div>
@@ -166,7 +147,7 @@
                     </div>
 
                     <!-- Recent Notifications -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="bg-white rounded-lg shadow overflow-hidden cv">
                         <div class="p-6 border-b border-gray-200">
                             <h3 class="text-lg font-semibold">Recent Notifications</h3>
                         </div>
@@ -177,86 +158,11 @@
         </div>
     </div>
 
-    <!-- New Meeting Modal -->
-    <div id="newMeetingModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-semibold">New Meeting Request</h3>
-                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <form id="meetingRequestForm">
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Meeting Title</label>
-                            <input type="text" id="meetingTitle" required 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                                <input type="text" id="meetingDate" required 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 datepicker">
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
-                                    <input type="time" id="startTime" required 
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
-                                    <input type="time" id="endTime" required 
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Venue</label>
-                            <select id="venueSelect" required 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="">Select a venue</option>
-                                <!-- Venues will be populated by JavaScript -->
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Description (Optional)</label>
-                            <textarea id="meetingDescription" rows="3"
-                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                        </div>
-                        
-                        <div class="flex justify-end space-x-3 pt-4">
-                            <button type="button" id="cancelMeeting" 
-                                    class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                Cancel
-                            </button>
-                            <button type="submit" 
-                                    class="px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Submit Request
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize date picker
-        flatpickr(".datepicker", {
-            dateFormat: "Y-m-d",
-            minDate: "today"
-        });
-    });
     
+    <script>
+        
     (function(){
-    async function fetchJSON(url){ const r=await fetch(url,{credentials:'include'}); if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); }
+    async function fetchJSON(url){ const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || ''; const headers = token ? { 'Authorization': 'Bearer ' + token } : {}; const r = await fetch(url,{ headers }); if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); }
     function formatRange(sISO,eISO){ const s=new Date(sISO), e=new Date(eISO); const time=d=>d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); return `${s.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})}, ${time(s)} - ${time(e)}`; }
     function canJoin(m){ const now=new Date(); const s=new Date(m.start), e=new Date(m.end); return now>=new Date(s.getTime()-15*60*1000)&& now<=e; }
     function showToast(msg,type='success'){ const t=document.getElementById('toast'); const m=document.getElementById('toast-message')||document.getElementById('toastMessage'); if(t&&m){ m.textContent=msg; t.className=`fixed top-4 right-4 p-4 rounded-md shadow-lg z-50 flex items-center ${type==='success'?'bg-green-500':'bg-red-500'} text-white`; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),2000); } }
@@ -321,9 +227,7 @@
       try {
         await Promise.all([
           loadDashboard(),
-          loadUpcoming(),
-          loadUserMeetings(),
-          loadAvailableVenues()
+          loadUpcoming()
         ]);
       } catch (error) {
         console.error('Error loading dashboard data:', error);
@@ -334,7 +238,8 @@
     // Load user's meetings
     async function loadUserMeetings() {
       try {
-        const response = await fetch('/api/user/meetings');
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
+        const response = await fetch('/api/user/meetings', { headers: token ? { 'Authorization': 'Bearer ' + token } : {} });
         if (!response.ok) throw new Error('Failed to load meetings');
         const meetings = await response.json();
         
@@ -403,7 +308,8 @@
     // Load available venues
     async function loadAvailableVenues() {
       try {
-        const response = await fetch('/api/venues/available');
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
+        const response = await fetch('/api/venues', { headers: token ? { 'Authorization': 'Bearer ' + token } : {} });
         if (!response.ok) throw new Error('Failed to load venues');
         const venues = await response.json();
         
@@ -460,7 +366,7 @@
         venueSelect.innerHTML = `<option value="${venueId}" selected>${escapeHtml(venueName)}</option>`;
       } else {
         // Otherwise load all venues
-        fetch('/api/venues')
+        fetch('/api/venues', { headers: (function(){ const t = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || ''; return t ? { 'Authorization': 'Bearer ' + t } : {}; })() })
           .then(res => res.json())
           .then(venues => {
             venueSelect.innerHTML = '<option value="">Select a venue</option>' +
@@ -507,9 +413,10 @@
     // Cancel a meeting
     async function cancelMeeting(meetingId) {
       try {
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
         const response = await fetch(`/api/meetings/${meetingId}/cancel`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...(token ? { 'Authorization': 'Bearer ' + token } : {}) },
           body: JSON.stringify({ reason: 'Cancelled by user' })
         });
         
@@ -563,18 +470,33 @@
           }
           
           try {
-            const response = await fetch('/api/meetings/request', {
+            const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
+            // Map form data to backend API contract
+            const toDateTime = (d, t) => `${d} ${t}:00`;
+            const meetingData = {
+              title: formData.title,
+              description: formData.description,
+              venue_id: formData.venueId || null,
+              meeting_type: 'in_person',
+              start_time: toDateTime(formData.date, formData.startTime),
+              end_time: toDateTime(formData.date, formData.endTime),
+              is_recurring: false,
+              recurrence_pattern: null,
+              max_participants: null
+            };
+
+            const response = await fetch('/api/meetings', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(formData)
+              headers: { 'Content-Type': 'application/json', ...(token ? { 'Authorization': 'Bearer ' + token } : {}) },
+              body: JSON.stringify(meetingData)
             });
             
             if (!response.ok) {
-              const error = await response.json();
-              throw new Error(error.message || 'Failed to submit meeting request');
+              const error = await response.json().catch(()=>({}));
+              throw new Error(error.error || error.message || 'Failed to create meeting');
             }
             
-            showToast('Meeting request submitted successfully', 'success');
+            showToast('Meeting created successfully', 'success');
             closeModal();
             loadUserMeetings();
             loadAvailableVenues();
@@ -587,24 +509,26 @@
     }
 
     // Initialize the page
-    document.addEventListener('DOMContentLoaded', async () => {
+    document.addEventListener('DOMContentLoaded', () => {
       initEventListeners();
-      await loadAllData();
-      
-      // Check for unread notifications
-      checkUnreadNotifications();
-      
-      // Set up notification polling (check every 30 seconds)
-      setInterval(checkUnreadNotifications, 30000);
+      const schedule = window.requestIdleCallback || function(cb){ setTimeout(cb, 0); };
+      schedule(async () => {
+        await loadAllData();
+        // Check for unread notifications
+        checkUnreadNotifications();
+        // Set up notification polling (check every 30 seconds)
+        setInterval(checkUnreadNotifications, 30000);
+      });
     });
     
     // Check for unread notifications
     async function checkUnreadNotifications() {
       try {
-        const response = await fetch('/api/notifications/unread/count');
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
+        const response = await fetch('/api/notifications/unread/count', { headers: token ? { 'Authorization': 'Bearer ' + token } : {} });
         if (response.ok) {
           const { count } = await response.json();
-          const badge = document.getElementById('notificationBadge');
+          const badge = document.querySelector('.notification-badge');
           if (badge) {
             badge.textContent = count > 0 ? (count > 9 ? '9+' : count) : '';
             badge.classList.toggle('hidden', count === 0);
@@ -628,5 +552,40 @@
   })();
     </script>
     <script src="js/common.js"></script>
+    <script>
+    (function(){
+      function sameOrigin(href){ try{ var u=new URL(href, window.location.href); return u.origin===window.location.origin; }catch(e){ return false; } }
+      function isAnchorLink(a){ var href=a.getAttribute('href')||''; return href.startsWith('#'); }
+      function onReady(fn){ if (document.readyState==='complete' || document.readyState==='interactive'){ setTimeout(fn,0); } else { document.addEventListener('DOMContentLoaded', fn); } }
+      // Fade-in on load
+      onReady(function(){
+        document.body.classList.add('page-fade');
+        requestAnimationFrame(function(){ document.body.classList.add('page-fade-in'); });
+      });
+      // Smooth fade-out navigation and prefetch
+      document.addEventListener('click', function(e){
+        var a = e.target.closest('a[href]');
+        if(!a) return;
+        if (a.target && a.target !== '' && a.target !== '_self') return;
+        if (a.hasAttribute('download')) return;
+        var href = a.getAttribute('href');
+        if (!href || isAnchorLink(a) || !sameOrigin(href)) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        document.body.classList.add('is-leaving');
+        setTimeout(function(){ window.location.href = href; }, 180);
+      });
+      var prefetched=new Set();
+      function prefetch(href){
+        try {
+          if (prefetched.has(href)) return;
+          var l=document.createElement('link'); l.rel='prefetch'; l.href=href; document.head.appendChild(l);
+          prefetched.add(href);
+        } catch(e){}
+      }
+      document.addEventListener('mouseover', function(e){ var a=e.target.closest('a[href]'); if(!a) return; var href=a.getAttribute('href')||''; if(sameOrigin(href) && !isAnchorLink(a)) prefetch(href); });
+      document.addEventListener('touchstart', function(e){ var a=e.target.closest('a[href]'); if(!a) return; var href=a.getAttribute('href')||''; if(sameOrigin(href) && !isAnchorLink(a)) prefetch(href); }, {passive:true});
+    })();
+    </script>
 </body>
 </html>

@@ -48,7 +48,7 @@ class AuthUtils {
         document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         
         if (redirectToLogin) {
-            window.location.href = '/auth/logout.html';
+            window.location.href = '../auth/logout.html';
         }
         
         return true;
@@ -56,7 +56,7 @@ class AuthUtils {
 
     // Check if current route requires authentication
     static checkAuth() {
-        const publicRoutes = ['/auth/login.html', '/auth/logout.html', '/auth/forgot-password.html'];
+        const publicRoutes = ['../auth/login.html', '../auth/logout.html', '../auth/forgot-password.html'];
         const currentPath = window.location.pathname;
         
         // Skip auth check for public routes

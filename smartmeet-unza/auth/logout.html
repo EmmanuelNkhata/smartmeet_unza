@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logging Out - SmartMeet UNZA</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+    <link rel="alternate icon" type="image/png" sizes="256x256" href="../assets/images/favicon-256.png">
+    <meta name="theme-color" content="#1e40af">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/auth/logout.js"></script>
     <style>
@@ -35,7 +38,8 @@
             100% { transform: rotate(360deg); }
         }
     </style>
-</head>
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    </head>
 <body>
     <div class="logout-container">
         <div class="spinner">
@@ -44,8 +48,14 @@
             </svg>
         </div>
         <h2 class="text-2xl font-bold text-gray-800 mb-2">Signing Out</h2>
-        <p class="text-gray-600 mb-6">Please wait while we securely sign you out...</p>
-        <p class="text-sm text-gray-500">If you're not redirected, <a href="/auth/login.html" class="text-blue-600 hover:underline">click here</a> to go to the login page.</p>
+        <p class="text-gray-600 mb-6">You have been signed out.</p>
+        <p class="text-sm text-gray-500">Redirecting to admin dashboard... <a href="/admin/" class="text-blue-600 hover:underline">Click here</a> if not redirected.</p>
+        <script>
+            // Redirect to admin dashboard after a short delay
+            setTimeout(() => {
+                window.location.href = '/admin/';
+            }, 1500);
+        </script>
     </div>
 </body>
 </html>

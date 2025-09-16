@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SmartMeet UNZA</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+    <link rel="alternate icon" type="image/png" sizes="256x256" href="../assets/images/favicon-256.png">
+    <meta name="theme-color" content="#1e40af">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../public/css/tailwind.css">
+    <link rel="stylesheet" href="../public/css/base.css">
+    <link rel="stylesheet" href="../public/css/styles.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #cfe9ff 0%, #93c5fd 30%, #60a5fa 55%, #3b82f6 75%, #1e40af 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .login-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .input-field {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-field input {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .input-field input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+        
+        .input-field i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+        
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 500;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #4338ca;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box p-8 w-full max-w-md mx-4 bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl">
+            <!-- Logo -->
+            <div class="text-center mb-8">
+                <img id="brandLogo" src="../assets/images/20250308_013030.jpg" alt="SmartMeet UNZA Logo" class="mx-auto mb-4 h-16 object-contain" onerror="this.style.display='none';document.getElementById('fallbackLogo').classList.remove('hidden');">
+                <div id="fallbackLogo" class="hidden">
+                    <h1 class="text-2xl font-bold text-gray-800">SmartMeet</h1>
+                    <p class="text-indigo-600 font-medium">UNZA</p>
+                </div>
+            </div>
+            
+            <!-- Google Sign-In -->
+            <div id="googleSignIn" class="text-center">
+                <div class="mb-8">
+                    <h1 class="text-2xl font-bold text-gray-800 mb-2">Welcome to SmartMeet UNZA</h1>
+                    <p class="text-gray-500 text-sm mb-6">Sign in with your Google account</p>
+                    
+                    <!-- Google Sign-In Button -->
+                    <div id="g_id_onload"
+                         data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+                         data-context="signin"
+                         data-ux_mode="popup"
+                         data-callback="handleCredentialResponse"
+                         data-auto_prompt="false"
+                         class="mb-6">
+                    </div>
+
+                    <div class="g_id_signin"
+                         data-type="standard"
+                         data-size="large"
+                         data-theme="outline"
+                         data-text="sign_in_with"
+                         data-shape="rectangular"
+                         data-logo_alignment="left"
+                         data-width="300">
+                    </div>
+                    
+                    <!-- Role Selection (hidden by default) -->
+                    <div id="roleSelection" class="mt-8 hidden">
+                        <p class="text-sm text-gray-500 mb-4">Select your role:</p>
+                        <div class="flex flex-col items-center space-y-4">
+                            <button id="adminRoleBtn" type="button" class="w-full max-w-xs px-6 py-3 border-2 border-gray-200 rounded-lg hover:border-red-500 hover:bg-red-50 transition-all focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                                <div class="flex flex-col items-center">
+                                    <i class="fas fa-user-shield text-2xl text-red-600 mb-1"></i>
+                                    <h3 class="font-semibold text-gray-800">Administrator</h3>
+                                </div>
+                            </button>
+                            
+                            <button id="userRoleBtn" type="button" class="w-full max-w-xs px-6 py-3 border-2 border-gray-200 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                                <div class="flex flex-col items-center">
+                                    <i class="fas fa-user text-2xl text-indigo-600 mb-1"></i>
+                                    <h3 class="font-semibold text-gray-800">User</h3>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginFormContainer" class="hidden">
+                <div class="flex items-center mb-6">
+                    <button id="backToRoles" class="flex items-center text-indigo-600 hover:text-indigo-800 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        <span class="text-sm font-medium">Change Role</span>
+                    </button>
+                    <div class="ml-auto bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center">
+                        <span>Logging in as:</span>
+                        <span id="currentRoleBadge" class="ml-1 font-semibold">User</span>
+                    </div>
+                </div>
+                
+                <div class="text-center mb-8">
+                    <h1 class="text-2xl font-bold text-gray-800 mb-2">Sign In</h1>
+                    <p class="text-gray-500 text-sm">Sign in to your <span id="selectedRoleText">User</span> account</p>
+                </div>
+                
+                <div id="errorMessage" class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-4 hidden" role="alert">
+                    <p id="errorText"></p>
+                </div>
+                
+                <form id="loginForm" class="mb-4">
+                    <div class="input-field">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" placeholder="Email" required>
+                    </div>
+                    
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Password" required>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="rememberMe" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                        </label>
+                        <a href="forgot-password.html" class="text-sm text-indigo-600 hover:underline">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" id="loginBtn" class="btn-primary">
+                        <span>Sign In</span>
+                    </button>
+                </form>
+                
+                <div class="text-center text-sm text-gray-600">
+                    Don't have an account? 
+                    <a href="#" id="showSignup" class="text-indigo-600 font-medium hover:underline">Sign up</a>
+                </div>
+            </div>
+            
+            <!-- Signup Form -->
+            <div id="signupFormContainer" class="hidden">
+                <div class="flex items-center mb-6 cursor-pointer" id="backToLogin">
+                    <i class="fas fa-arrow-left mr-2 text-indigo-600"></i>
+                    <span class="text-indigo-600 text-sm font-medium">Back to login</span>
+                </div>
+                
+                <div class="text-center mb-8">
+                    <h1 class="text-2xl font-bold text-gray-800 mb-2">Create Account</h1>
+                    <p class="text-gray-500 text-sm">Create a new account</p>
+                </div>
+                
+                <form id="signupForm" class="mb-4">
+                    <div class="input-field">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="fullName" placeholder="Full Name" required>
+                    </div>
+                    
+                    <div class="input-field">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="signupEmail" placeholder="Email" required>
+                    </div>
+                    
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signupPassword" placeholder="Password" required>
+                    </div>
+                    
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                    </div>
+                    
+                    <button type="submit" id="signupBtn" class="btn-primary">
+                        <span>Create Account</span>
+                    </button>
+                </form>
+                
+                <div class="text-center text-sm text-gray-600">
+                    Already have an account? 
+                    <a href="#" id="showLogin" class="text-indigo-600 font-medium hover:underline">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Google OAuth Configuration
+        let currentUser = null;
+
+        // Handle Google Sign-In response
+        function handleCredentialResponse(response) {
+            // Decode the JWT token
+            const responsePayload = JSON.parse(atob(response.credential.split('.')[1]));
+            
+            // Store user information
+            currentUser = {
+                name: responsePayload.name,
+                email: responsePayload.email,
+                picture: responsePayload.picture,
+                email_verified: responsePayload.email_verified
+            };
+            
+            // Show role selection
+            document.getElementById('googleSignIn').querySelector('p').textContent = 'Select your role to continue';
+            document.getElementById('roleSelection').classList.remove('hidden');
+            
+            // Hide Google Sign-In button
+            document.querySelector('.g_id_signin').style.display = 'none';
+        }
+
+        // Auth Utilities
+        const AuthUtils = {
+            // Check if user is logged in and redirect
+            checkAuth: function() {
+                // Skip auto-redirect if this is a logout action
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('logout')) {
+                    // Clear any remaining auth data
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('authToken');
+                    sessionStorage.clear();
+                    // Clear the URL parameters
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    return false;
+                }
+                
+                // Only redirect if there's a valid session
+                const session = JSON.parse(localStorage.getItem('currentUser') || 'null');
+                if (session && session.email_verified) {
+                    window.location.href = session.role === 'admin' ? 
+                        '../admin/index.html' : 'dashboard.html';
+                    return true;
+                }
+                return false;
+            },
+            
+            // Handle logout
+            handleLogout: function() {
+                // Clear all auth data
+                const authItems = [
+                    'currentUser', 'authToken', 'user', 'isLoggedIn', 'userRole', 
+                    'userEmail', 'userName', 'isFirstLogin', 'google_token',
+                    'google_auth_state', 'session_token', 'refresh_token', 'access_token'
+                ];
+                
+                authItems.forEach(item => localStorage.removeItem(item));
+                sessionStorage.clear();
+                
+                // Clear Google Auth if available
+                if (window.google && window.google.accounts && window.google.accounts.id) {
+                    try {
+                        google.accounts.id.disableAutoSelect();
+                        google.accounts.id.revoke(localStorage.getItem('email'), function() {
+                            console.log('Google session revoked');
+                        });
+                    } catch (e) {
+                        console.warn('Error revoking Google session:', e);
+                    }
+                }
+                
+                // Redirect to login with logout parameter
+                const loginUrl = '/auth/login.html?logout=' + new Date().getTime();
+                window.location.href = loginUrl;
+            },
+            },
+            
+            // Initialize default admin user if none exists
+            initializeDefaultAdmin: () => {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                if (!users.some(user => user.role === 'admin')) {
+                    users.push({
+                        id: 'admin-1',
+                        name: 'Admin User',
+                        email: 'admin@unza.zm',
+                        password: AuthUtils.hashPassword('admin123'),
+                        role: 'admin',
+                        createdAt: new Date().toISOString()
+                    });
+                    localStorage.setItem('users', JSON.stringify(users));
+                }
+            },
+            
+            // Password hashing (simplified for demo)
+            hashPassword: (password) => {
+                return btoa(password); // In production, use proper hashing
+            },
+            
+            // Show error message
+            showError: (message) => {
+                const errorElement = document.getElementById('errorMessage');
+                const errorText = document.getElementById('errorText');
+                if (errorElement && errorText) {
+                    errorText.textContent = message;
+                    errorElement.classList.remove('hidden');
+                    setTimeout(() => errorElement.classList.add('hidden'), 5000);
+                }
+            },
+            
+            // Show success message
+            showSuccess: (message) => {
+                // In a real app, show a success message
+                console.log('Success:', message);
+            },
+            
+            // Initialize the application
+            init: () => {
+                setupEventListeners();
+                // Check for role in URL (for direct access)
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('role')) {
+                    handleRoleSelection(urlParams.get('role'));
+                }
+            }
+        };
+
+        // Main application
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize auth
+            AuthUtils.checkAuth();
+            AuthUtils.handleLogout();
+            
+            // DOM elements
+            const elements = {
+                roleSelection: document.getElementById('roleSelection'),
+                googleSignIn: document.getElementById('googleSignIn'),
+                userRoleBtn: document.getElementById('userRoleBtn'),
+                adminRoleBtn: document.getElementById('adminRoleBtn'),
+                backToRoles: document.getElementById('backToRoles')
+            };
+            
+            // Initialize
+            AuthUtils.init();
+            
+            // Setup event listeners
+            function setupEventListeners() {
+                // Role selection
+                if (elements.userRoleBtn) {
+                    elements.userRoleBtn.addEventListener('click', () => handleRoleSelection('user'));
+                }
+                if (elements.adminRoleBtn) {
+                    elements.adminRoleBtn.addEventListener('click', () => handleRoleSelection('admin'));
+                }
+                
+                // Back to role selection
+                if (elements.backToRoles) {
+                    elements.backToRoles.addEventListener('click', () => {
+                        // Reset Google Sign-In
+                        google.accounts.id.disableAutoSelect();
+                        // Reload the page to reset the Google button
+                        window.location.href = 'login.html';
+                    });
+                }
+            }
+            
+            // Handle role selection after Google Sign-In
+            function handleRoleSelection(role) {
+                if (!currentUser) {
+                    console.error('No user authenticated');
+                    return;
+                }
+                
+                // Add role to user data
+                currentUser.role = role;
+                currentUser.lastLogin = new Date().toISOString();
+                
+                // Store user in localStorage
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // Redirect based on role
+                window.location.href = role === 'admin' ? 
+                    '../admin/index.html' : 'dashboard.html';
+            }
+            
+            // Update UI based on selected role
+            function updateRoleUI(role) {
+                const roleText = role === 'admin' ? 'Administrator' : 'User';
+                const roleBadge = document.getElementById('currentRoleBadge');
+                
+                // Update the role badge if it exists
+                if (roleBadge) {
+                    roleBadge.textContent = roleText;
+                    roleBadge.className = 'ml-1 font-semibold ' + 
+                        (role === 'admin' ? 'text-red-600' : 'text-indigo-600');
+                }
+            }
+            
+            // Show error message
+            function showError(message) {
+                const errorElement = document.getElementById('errorMessage');
+                const errorText = document.getElementById('errorText');
+                
+                if (errorElement && errorText) {
+                    errorText.textContent = message;
+                    errorElement.classList.remove('hidden');
+                    
+                    // Auto-hide error after 5 seconds
+                    setTimeout(() => {
+                        errorElement.classList.add('hidden');
+                    }, 5000);
+                }
+            }
+            
+            // Handle login form submission
+            async function handleLogin(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email')?.value;
+                const password = document.getElementById('password')?.value;
+                const rememberMe = document.getElementById('rememberMe')?.checked;
+                const loginBtn = document.getElementById('loginBtn');
+                
+                if (!email || !password) {
+                    AuthUtils.showError('Please fill in all fields');
+                    return;
+                }
+                
+                try {
+                    // Update UI for loading state
+                    if (loginBtn) {
+                        loginBtn.disabled = true;
+                        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Signing in...';
+                    }
+                    
+                    // Simulate API call
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // Get users from localStorage
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const user = users.find(u => u.email === email && 
+                        u.password === AuthUtils.hashPassword(password));
+                    
+                    if (!user) {
+                        throw new Error('Invalid email or password');
+                    }
+                    
+                    // Check if user has the correct role
+                    if (currentRole === 'admin' && user.role !== 'admin') {
+                        throw new Error('Admin access required');
+                    }
+                    
+                    // Save user session
+                    const sessionUser = {
+                        id: user.id,
+                        name: user.name || user.email.split('@')[0],
+                        email: user.email,
+                        role: user.role,
+                        lastLogin: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('currentUser', JSON.stringify(sessionUser));
+                    
+                    // Redirect based on role
+                    window.location.href = user.role === 'admin' ? 
+                        '../admin/index.html' : 'dashboard.html';
+                    
+                } catch (error) {
+                    console.error('Login error:', error);
+                    AuthUtils.showError(error.message || 'Login failed. Please try again.');
+                } finally {
+                    // Reset UI
+                    if (loginBtn) {
+                        loginBtn.disabled = false;
+                        loginBtn.innerHTML = '<span>Sign In</span>';
+                    }
+                }
+            }
+            
+            // Handle signup form submission
+            async function handleSignup(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('fullName')?.value;
+                const email = document.getElementById('signupEmail')?.value;
+                const password = document.getElementById('signupPassword')?.value;
+                const confirmPassword = document.getElementById('confirmPassword')?.value;
+                const signupBtn = document.getElementById('signupBtn');
+                
+                // Validate inputs
+                if (!name || !email || !password || !confirmPassword) {
+                    AuthUtils.showError('Please fill in all fields');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    AuthUtils.showError('Passwords do not match');
+                    return;
+                }
+                
+                try {
+                    // Update UI for loading state
+                    if (signupBtn) {
+                        signupBtn.disabled = true;
+                        signupBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Creating account...';
+                    }
+                    
+                    // Simulate API call
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // Check if user already exists
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    if (users.some(user => user.email === email)) {
+                        throw new Error('User with this email already exists');
+                    }
+                    
+                    // Create new user
+                    const newUser = {
+                        id: 'user-' + Date.now(),
+                        name,
+                        email,
+                        password: AuthUtils.hashPassword(password),
+                        role: 'user',
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    users.push(newUser);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    // Show success message and redirect to login
+                    AuthUtils.showSuccess('Account created successfully! Please login.');
+                    showLoginForm('user');
+                    
+                } catch (error) {
+                    console.error('Signup error:', error);
+                    AuthUtils.showError(error.message || 'Failed to create account. Please try again.');
+                } finally {
+                    // Reset UI
+                    if (signupBtn) {
+                        signupBtn.disabled = false;
+                        signupBtn.innerHTML = '<span>Create Account</span>';
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

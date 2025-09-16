@@ -153,5 +153,13 @@
     </div>
 
     <script src="js/common.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function(){
+        var container = document.querySelector('.max-w-4xl.mx-auto');
+        if (container){
+          container.innerHTML = '<div class="bg-white rounded-lg border border-gray-100 p-8 text-center text-gray-500">No notifications</div>';
+        }
+      });
+    </script>
 </body>
 </html>

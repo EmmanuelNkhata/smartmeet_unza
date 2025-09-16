@@ -7,8 +7,8 @@
     <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
     <link rel="alternate icon" type="image/png" sizes="256x256" href="../assets/images/favicon-256.png">
     <meta name="theme-color" content="#1e40af">
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../public/css/tailwind.css">
     <link rel="stylesheet" href="../public/css/base.css">
     <link rel="stylesheet" href="../public/css/styles.css">
     <!-- Common UI Components (loaded first) -->
@@ -69,7 +69,8 @@
             </div>
 
             <!-- Navigation -->
-            <nav class="space-y-2 flex-1">
+            <div id="sidebar-container">
+<nav class="space-y-2 flex-1">
                 <a href="index.html" class="flex items-center p-2 rounded bg-blue-900">
                     <i class="fas fa-tachometer-alt w-5 mr-3"></i>
                     <span>Dashboard</span>
@@ -99,6 +100,7 @@
                     <span>Notifications</span>
                 </a>
             </nav>
+</div>
 
             <!-- Sidebar Sign out (bottom) -->
             <div class="mt-auto pt-4 border-t border-blue-700">
@@ -111,53 +113,67 @@
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="bg-white shadow-sm p-4">
+            <div id="header-container">
+<header class="bg-white shadow-sm p-4">
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
                     <div class="flex items-center space-x-4">
+                        <!-- Notifications Dropdown -->
                         <div class="relative">
-                            <button class="notifications-button p-2 text-gray-600 hover:text-gray-900 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 relative" aria-label="View notifications" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell" aria-hidden="true"></i>
-                                <span id="notificationsBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center" aria-live="polite">0</span>
+                            <button id="notificationsBtn" class="p-2 rounded-full text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 relative focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" aria-label="Notifications">
+                                <i class="fas fa-bell text-xl" aria-hidden="true"></i>
+                                <span class="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center notification-badge hidden">0</span>
                             </button>
                             <!-- Notifications Panel -->
-                            <div id="notificationsPanel" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden z-50" role="region" aria-label="Notifications" aria-live="polite">
-                                <div class="p-2 border-b border-gray-200">
-                                    <h2 class="text-sm font-medium text-gray-700" id="notifications-label">Notifications</h2>
+                            <div id="notificationsMenu" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700" role="region" aria-label="Notifications" aria-live="polite">
+                                <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                                    <div class="flex justify-between items-center">
+                                        <h3 class="font-medium dark:text-white">Notifications</h3>
+                                        <button id="markAllRead" class="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">Mark all as read</button>
+                                    </div>
                                 </div>
-                                <div class="notifications-container max-h-96 overflow-y-auto">
-                                    <!-- Notifications will be loaded here -->
-                                    <div class="p-4 text-center text-gray-500">Loading notifications...</div>
+                                <div class="max-h-96 overflow-y-auto" id="notificationsList">
+                                    <!-- Notifications will be loaded here dynamically -->
+                                    <div class="p-4 text-center text-gray-500 dark:text-gray-300">Loading notifications...</div>
+                                </div>
+                                <div class="px-4 py-2 border-t border-gray-200 dark:border-gray-700 text-center">
+                                    <a href="notifications.html" class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">View all notifications</a>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Admin Dropdown -->
                         <div class="relative">
-                            <button id="profileMenuButton" class="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full" aria-label="User menu" aria-haspopup="true" aria-expanded="false">
-                                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
-                                    <span id="userInitials" aria-hidden="true">AU</span>
-                                    <span class="sr-only">User profile</span>
-                                </div>
-                                <span id="profileUserName" class="hidden md:inline-block text-sm font-medium text-gray-700">Loading...</span>
-                                <i class="fas fa-chevron-down text-xs text-gray-500 hidden md:inline-block" aria-hidden="true"></i>
+                            <button id="adminMenuBtn" class="p-2 rounded-full text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 relative focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" aria-label="Admin Menu" aria-expanded="false" aria-haspopup="menu">
+                                <i class="fas fa-user-shield text-xl" aria-hidden="true"></i>
                             </button>
-                            <!-- Dropdown menu -->
-                            <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50" role="menu" aria-orientation="vertical" aria-labelledby="profileMenuButton">
-                                <a href="profile.html" role="menuitem" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none">
-                                    <i class="fas fa-user-circle mr-2" aria-hidden="true"></i>Your Profile
-                                </a>
-                                <a href="settings.html" role="menuitem" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none">
-                                    <i class="fas fa-cog mr-2" aria-hidden="true"></i>Settings
-                                </a>
-                                <div class="border-t border-gray-100 my-1" role="separator"></div>
-                                <a href="#" id="topNavSignOut" role="menuitem" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 focus:bg-red-50 focus:outline-none">
-                                    <i class="fas fa-sign-out-alt mr-2" aria-hidden="true"></i>Sign out
-                                    <span class="sr-only">Sign out</span>
-                                </a>
+                            <!-- Admin Panel -->
+                            <div id="adminMenu" class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700" role="menu" aria-orientation="vertical" aria-labelledby="adminMenuBtn">
+                                <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Admin Panel</p>
+                                </div>
+                                <div class="py-1">
+                                    <a href="users.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700" role="menuitem">
+                                        <i class="fas fa-users mr-3 w-5 text-center"></i> Manage Users
+                                    </a>
+                                    <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+                                    <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700" role="menuitem">
+                                        <i class="fas fa-user-edit mr-3 w-5 text-center"></i> Profile Settings
+                                    </a>
+                                    <a href="change-password.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700" role="menuitem">
+                                        <i class="fas fa-key mr-3 w-5 text-center"></i> Change Password
+                                    </a>
+                                    <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+                                    <a href="signout.html" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-gray-700" role="menuitem">
+                                        <i class="fas fa-sign-out-alt mr-3 w-5 text-center"></i> Sign Out
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </header>
+</div>
 
             <!-- Page Content -->
             <main class="flex-1 overflow-y-auto p-6">

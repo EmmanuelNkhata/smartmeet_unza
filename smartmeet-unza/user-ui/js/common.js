@@ -112,8 +112,11 @@ function initUserProfile() {
                 e.preventDefault();
                 console.log('User logged out');
                 // Clear persisted user info if any
-                try { localStorage.removeItem('smartmeet_unza_user'); } catch {}
-                window.location.href = 'login.html';
+                try {
+                    ['smartmeet_unza_user','authToken','isLoggedIn','userEmail','userRole','userName','lastLogin','rememberMe']
+                      .forEach(k => { localStorage.removeItem(k); sessionStorage.removeItem(k); });
+                } catch {}
+                window.location.href = 'index.html';
             });
             el.dataset.bound = '1';
         }
@@ -501,20 +504,8 @@ async function injectComponents() {
 
 // Load user from backend
 async function loadMe() {
-    try {
-        const res = await fetch('/api/me', { credentials: 'include' });
-        if (!res.ok) return;
-        const me = await res.json();
-        if (me && typeof me === 'object') {
-            userData.name = me.name || userData.name;
-            userData.email = me.email || userData.email;
-            userData.role = me.role || userData.role;
-            userData.avatar = me.avatar || userData.avatar;
-            persistUser();
-        }
-    } catch (e) {
-        console.warn('Failed to load /api/me', e);
-    }
+    // Frontend-only mode: skip server request for user info
+    return;
 }
 
 // Initialize after components are injected

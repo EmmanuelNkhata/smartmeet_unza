@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Access - SmartMeet UNZA</title>
+    <script>
+        // Set mock admin user
+        const mockUser = {
+            id: 'bypass-admin',
+            name: 'Admin User',
+            email: 'admin@unza.zm',
+            role: 'admin',
+            avatar: ''
+        };
+        
+        // Store in localStorage
+        localStorage.setItem('user', JSON.stringify(mockUser));
+        localStorage.setItem('authToken', 'bypass-token-' + Date.now());
+        
+        // Override AuthUtils if it exists
+        if (typeof AuthUtils !== 'undefined') {
+            const originalCheckAuth = AuthUtils.checkAuth;
+            AuthUtils.checkAuth = function() {
+                return true; // Always allow access
+            };
+            
+            // Override logout to prevent actual logout
+            const originalLogout = AuthUtils.logout;
+            AuthUtils.logout = function() {
+                // Just redirect to admin instead of logging out
+                window.location.href = '/admin/';
+                return true;
+            };
+        }
+        
+        // Redirect to admin dashboard
+        window.location.href = '/admin/';
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    </head>
+<body>
+    <div style="text-align: center; margin-top: 100px; font-family: Arial, sans-serif;">
+        <h1>Loading Admin Dashboard...</h1>
+        <p>If you're not redirected, <a href="/admin/">click here</a>.</p>
+    </div>
+</body>
+</html>

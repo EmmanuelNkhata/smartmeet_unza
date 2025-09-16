@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Booking - SmartMeet UNZA</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+    <link rel="alternate icon" type="image/png" sizes="256x256" href="../assets/images/favicon-256.png">
+    <meta name="theme-color" content="#1e40af">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -73,6 +76,8 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <!-- Alpine.js for dropdowns -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+        <script src="/public/js/common.js"></script>
 </head>
 <body class="bg-gray-50">
     <div class="flex h-screen">
@@ -101,7 +106,8 @@
             </div>
 
             <!-- Navigation -->
-            <nav class="space-y-2">
+            <div id="sidebar-container">
+<nav class="space-y-2">
                 <a href="index.html" class="flex items-center p-2 rounded hover:bg-blue-700">
                     <i class="fas fa-tachometer-alt w-5 mr-3"></i>
                     <span>Dashboard</span>
@@ -132,6 +138,7 @@
                     <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">3</span>
                 </a>
             </nav>
+</div>
 
             <!-- Sidebar Sign out (bottom) -->
             <div class="mt-auto pt-4 border-t border-blue-700">
@@ -145,7 +152,8 @@
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Top Navigation -->
-            <header class="bg-white shadow-sm p-4">
+            <div id="header-container">
+<header class="bg-white shadow-sm p-4">
                 <div class="flex justify-end items-center">
                     <h2 class="text-xl font-semibold text-gray-800 mr-auto">Room Booking System</h2>
                     <div class="flex items-center space-x-4">
@@ -156,6 +164,7 @@
                                             </div>
                 </div>
             </header>
+</div>
 
             <!-- Main Content Area -->
             <main class="flex-1 overflow-y-auto p-6 bg-gray-50">

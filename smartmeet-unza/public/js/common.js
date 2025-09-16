@@ -8,6 +8,48 @@ if (window.smartMeetCommonInitialized) {
     console.log('SmartMeet Common UI already initialized');
 } else {
     window.smartMeetCommonInitialized = true;
+    
+    // Load components
+    async function loadComponents() {
+        try {
+            // Load header
+            const headerContainer = document.getElementById('header-container');
+            if (headerContainer) {
+                try {
+                    const response = await fetch('../components/header.html');
+                    if (response.ok) {
+                        headerContainer.innerHTML = await response.text();
+                    } else {
+                        console.error('Failed to load header:', response.status, response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error loading header:', error);
+                }
+            }
+            
+            // Load sidebar
+            const sidebarContainer = document.getElementById('sidebar-container');
+            if (sidebarContainer) {
+                try {
+                    const response = await fetch('../components/sidebar.html');
+                    if (response.ok) {
+                        sidebarContainer.innerHTML = await response.text();
+                    } else {
+                        console.error('Failed to load sidebar:', response.status, response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error loading sidebar:', error);
+                }
+            }
+            
+            // Initialize other UI components
+            if (typeof initCommonUI === 'function') {
+                initCommonUI();
+            }
+        } catch (error) {
+            console.error('Error loading components:', error);
+        }
+    }
 
     // Function to close all open dropdowns
     function closeAllDropdowns() {
@@ -247,11 +289,40 @@ function initCommonUI() {
     }
 }
 
+    // Initialize mobile menu toggle
+    function initMobileMenu() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const sidebar = document.getElementById('sidebar-container');
+        
+        if (mobileMenuButton && sidebar) {
+            mobileMenuButton.addEventListener('click', () => {
+                sidebar.classList.toggle('mobile-open');
+            });
+            
+            // Close sidebar when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && e.target !== mobileMenuButton && !mobileMenuButton.contains(e.target)) {
+                    sidebar.classList.remove('mobile-open');
+                }
+            });
+        }
+    }
+
+    // Load components when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initCommonUI);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComponents().then(() => {
+                initMobileMenu();
+                // Close mobile menu when clicking on a nav item
+                document.querySelectorAll('#sidebar-container .nav-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        document.getElementById('sidebar-container').classList.remove('mobile-open');
+                    });
+                });
+            });
+        });
     } else {
-        // DOM is already loaded
-        initCommonUI();
+        loadComponents().then(initMobileMenu);
     }
 }
 

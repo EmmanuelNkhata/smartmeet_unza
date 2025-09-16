@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Meeting - SmartMeet UNZA</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+    <link rel="alternate icon" type="image/png" sizes="256x256" href="../assets/images/favicon-256.png">
+    <meta name="theme-color" content="#1e40af">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/public/css/styles.css">
+        <script src="/public/js/common.js"></script>
 </head>
 <body class="bg-gray-100">
     <div class="flex h-screen">
@@ -35,7 +39,8 @@
             </div>
 
             <!-- Navigation -->
-            <nav class="space-y-2">
+            <div id="sidebar-container">
+<nav class="space-y-2">
                 <a href="index.html" class="flex items-center p-2 rounded hover:bg-blue-700">
                     <i class="fas fa-tachometer-alt w-5 mr-3"></i>
                     <span>Dashboard</span>
@@ -73,12 +78,14 @@
                     <span>Logout</span>
                 </a>
             </nav>
+</div>
         </div>
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Top Navigation -->
-            <header class="bg-white shadow-sm p-4">
+            <div id="header-container">
+<header class="bg-white shadow-sm p-4">
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-semibold text-gray-800">Create New Meeting</h2>
                     <div class="flex items-center space-x-4">
@@ -92,6 +99,7 @@
                     </div>
                 </div>
             </header>
+</div>
 
             <!-- Page Content -->
             <main class="flex-1 overflow-y-auto p-6">
@@ -216,6 +224,36 @@
                                     </button>
                                 </div>
 
+                                <!-- Meeting Documents -->
+                                <div class="pt-6 border-t border-gray-200">
+                                    <h3 class="text-lg font-medium text-gray-900 mb-4">Meeting Documents</h3>
+                                    <div class="space-y-4">
+                                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center" id="drop-zone">
+                                            <input type="file" id="document-upload" multiple class="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.jpeg,.png">
+                                            <div class="space-y-1 text-center">
+                                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                                <div class="flex text-sm text-gray-600">
+                                                    <label for="document-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                                        <span>Upload files</span>
+                                                        <input id="document-upload" name="document-upload" type="file" class="sr-only">
+                                                    </label>
+                                                    <p class="pl-1">or drag and drop</p>
+                                                </div>
+                                                <p class="text-xs text-gray-500">PDF, DOC, XLS, PPT, TXT, JPG, PNG up to 10MB</p>
+                                            </div>
+                                            <div id="file-list" class="mt-4 text-sm text-left">
+                                                <!-- Files will be listed here -->
+                                            </div>
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            <p>Upload meeting documents like agenda, previous minutes, or reference materials.</p>
+                                            <p>These will be available to all meeting participants.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Additional Options -->
                                 <div class="pt-6 border-t border-gray-200">
                                     <h3 class="text-lg font-medium text-gray-900 mb-4">Additional Options</h3>
@@ -285,5 +323,232 @@
             </main>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('document-upload');
+            const fileList = document.getElementById('file-list');
+            const files = [];
+            
+            // Handle drag and drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                dropZone.classList.add('border-blue-500', 'bg-blue-50');
+            }
+
+            function unhighlight() {
+                dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+            }
+
+            // Handle dropped files
+            dropZone.addEventListener('drop', handleDrop, false);
+            fileInput.addEventListener('change', handleFiles);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles({ target: { files } });
+            }
+
+            function handleFiles(e) {
+                const newFiles = [...e.target.files];
+                
+                // Validate and add files
+                newFiles.forEach(file => {
+                    const fileExt = file.name.split('.').pop().toLowerCase();
+                    const validTypes = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'jpg', 'jpeg', 'png'];
+                    
+                    if (!validTypes.includes(fileExt)) {
+                        alert(`File type not supported: ${file.name}`);
+                        return;
+                    }
+                    
+                    if (file.size > 10 * 1024 * 1024) { // 10MB
+                        alert(`File too large (max 10MB): ${file.name}`);
+                        return;
+                    }
+                    
+                    files.push(file);
+                });
+                
+                renderFileList();
+            }
+
+            function renderFileList() {
+                if (files.length === 0) {
+                    fileList.innerHTML = '<p class="text-gray-500 text-center">No files selected</p>';
+                    return;
+                }
+                
+                fileList.innerHTML = files.map((file, index) => `
+                    <div class="flex items-center justify-between p-2 bg-gray-50 rounded mb-2">
+                        <div class="flex items-center">
+                            <i class="fas ${getFileIcon(file.name)} text-gray-500 mr-2"></i>
+                            <span class="text-sm truncate max-w-xs">${file.name}</span>
+                            <span class="text-xs text-gray-500 ml-2">(${formatFileSize(file.size)})</span>
+                        </div>
+                        <button type="button" class="text-red-500 hover:text-red-700" onclick="removeFile(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            function getFileIcon(filename) {
+                const ext = filename.split('.').pop().toLowerCase();
+                const icons = {
+                    pdf: 'fa-file-pdf',
+                    doc: 'fa-file-word',
+                    docx: 'fa-file-word',
+                    xls: 'fa-file-excel',
+                    xlsx: 'fa-file-excel',
+                    ppt: 'fa-file-powerpoint',
+                    pptx: 'fa-file-powerpoint',
+                    txt: 'fa-file-alt',
+                    jpg: 'fa-file-image',
+                    jpeg: 'fa-file-image',
+                    png: 'fa-file-image'
+                };
+                return icons[ext] || 'fa-file';
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            // Make removeFile available globally for the onclick handler
+            window.removeFile = function(index) {
+                files.splice(index, 1);
+                renderFileList();
+            };
+
+            // Save meeting data to localStorage
+            function saveMeeting(formData) {
+                const meetings = JSON.parse(localStorage.getItem('meetings') || '[]');
+                const meetingId = 'meeting-' + Date.now();
+                
+                // Get participants from the form (simplified example)
+                const participants = [];
+                const participantInputs = document.querySelectorAll('.participant-email');
+                participantInputs.forEach(input => {
+                    if (input.value) {
+                        participants.push({
+                            email: input.value,
+                            role: 'participant',
+                            status: 'invited'
+                        });
+                    }
+                });
+                
+                // Get agenda items from the form (simplified example)
+                const agendaItems = [];
+                const agendaInputs = document.querySelectorAll('.agenda-item');
+                agendaInputs.forEach((input, index) => {
+                    if (input.value) {
+                        agendaItems.push({
+                            id: 'item-' + (index + 1),
+                            title: input.value,
+                            description: '',
+                            duration: 15, // Default duration in minutes
+                            status: 'pending',
+                            presenter: ''
+                        });
+                    }
+                });
+                
+                // Create document objects from uploaded files
+                const meetingDocuments = files.map(file => ({
+                    id: 'doc-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    uploadedAt: new Date().toISOString(),
+                    uploadedBy: 'current-user-id', // In a real app, get from auth context
+                    url: URL.createObjectURL(file), // In a real app, this would be a server URL
+                    isMeetingDocument: true,
+                    meetingId: meetingId,
+                    meetingTitle: formData.get('title')
+                }));
+                
+                // Create meeting object
+                const meeting = {
+                    id: meetingId,
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    startTime: formData.get('start-time'),
+                    endTime: formData.get('end-time'),
+                    venue: formData.get('venue'),
+                    meetingType: formData.get('meeting-type'),
+                    status: 'scheduled',
+                    createdAt: new Date().toISOString(),
+                    createdBy: 'current-user-id', // In a real app, get from auth context
+                    documents: meetingDocuments,
+                    participants: participants,
+                    agendaItems: agendaItems,
+                    settings: {
+                        allowDocumentUpload: true,
+                        notifyParticipants: formData.get('send-notification') === 'on',
+                        requireRSVP: true
+                    }
+                };
+
+                // Save meeting to localStorage
+                meetings.push(meeting);
+                localStorage.setItem('meetings', JSON.stringify(meetings));
+                
+                // Also update the documents list for the documents page
+                const allDocuments = JSON.parse(localStorage.getItem('documents') || '[]');
+                meetingDocuments.forEach(doc => allDocuments.push(doc));
+                localStorage.setItem('documents', JSON.stringify(allDocuments));
+                
+                return meetingId;
+            }
+
+            // Update form submission to include files
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    try {
+                        // Save meeting data
+                        const formData = new FormData(form);
+                        const meetingId = saveMeeting(formData);
+                        
+                        // In a real app, you would upload files to a server here
+                        // For now, we'll just show a success message
+                        
+                        alert(`Meeting created successfully with ${files.length} document(s)!`);
+                        window.location.href = 'meetings.html';
+                        
+                    } catch (error) {
+                        console.error('Error creating meeting:', error);
+                        alert('Failed to create meeting. Please try again.');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

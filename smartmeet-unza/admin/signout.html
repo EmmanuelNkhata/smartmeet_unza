@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signing Out - SmartMeet UNZA</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        // Clear session and redirect to login
+        document.addEventListener('DOMContentLoaded', function() {
+            // Clear all authentication data
+            localStorage.removeItem('user');
+            localStorage.removeItem('authToken');
+            
+            // Show signing out message
+            document.getElementById('signingOutMessage').classList.remove('hidden');
+            
+            // Redirect to login page after a short delay
+            setTimeout(function() {
+                window.location.href = '/auth/login.html';
+            }, 2000);
+        });
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+        <script src="/public/js/common.js"></script>
+</head>
+<body class="h-full">
+    <div id="sidebar-container">
+        <!-- Sidebar will be loaded here -->
+    </div>
+    <div id="header-container">
+        <!-- Header will be loaded here -->
+    </div>
+    <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+        <div class="max-w-md w-full space-y-8 text-center">
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <!-- Loading Spinner -->
+                <div class="flex justify-center mb-4">
+                    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                </div>
+                
+                <!-- Signing Out Message -->
+                <div id="signingOutMessage" class="hidden">
+                    <h2 class="mt-6 text-2xl font-bold text-gray-900">Signing Out</h2>
+                    <p class="mt-2 text-gray-600">Please wait while we sign you out...</p>
+                </div>
+                
+                <!-- Redirecting Message (shown after signing out) -->
+                <div id="redirectingMessage" class="mt-6">
+                    <p class="text-gray-600">Redirecting to login page...</p>
+                </div>
+            </div>
+        </div>
+    </div></body>
+</html>
